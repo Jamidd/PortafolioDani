@@ -1,0 +1,23 @@
+# Configuración de despliegue en Netlify
+# El build empaqueta solo los archivos publicables en dist/
+# (Descargas/ queda fuera: contiene los archivos fuente y las apps de Lyssa).
+
+[build]
+  command = "bash netlify-build.sh"
+  publish = "dist"
+
+# Los HTML siempre se revalidan; las imágenes se cachean un día.
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/img/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/docs/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"

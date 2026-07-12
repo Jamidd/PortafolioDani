@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Daily Confort — Daniela Ruiz</title>
+  <meta name="description" content="Daily Confort: branding y packaging para el bienestar de mujeres que realizan diálisis peritoneal. Mockup 3D construido desde el pliego real.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/proyecto.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90' font-family='serif' fill='%237C3A62'>D.</text></svg>">
+  <style>
+    /* ── Mockup 3D de la caja ──
+       Caja tipo estuche (tuck box) texturizada con los paneles
+       reales de "Packaging daily confort.pdf", recortados por
+       línea de plegado: el arte que cruza las aristas dobla igual
+       que en la caja impresa. */
+
+    .stage-wrap {
+      background: var(--bg-alt);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 40px 16px 32px;
+    }
+
+    .stage {
+      position: relative;
+      max-width: 860px;
+      margin: 0 auto;
+      height: 480px;
+      perspective: 1500px;
+      touch-action: none;
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .stage.dragging { cursor: grabbing; }
+
+    .scene {
+      position: absolute;
+      left: 50%;
+      top: 52%;
+      transform-style: preserve-3d;
+    }
+
+    /* proporciones del troquel (corte/plegado): frontal 217 × alto 295 × fondo 105 */
+    .box {
+      --w: 213;
+      --h: 290;
+      --d: 103;
+      position: absolute;
+      transform-style: preserve-3d;
+      transition: transform 0.9s cubic-bezier(0.3, 0.05, 0.25, 1);
+    }
+
+    .box.no-anim { transition: none; }
+
+    .face {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      background-color: #F2D7E2;
+    }
+
+    .f-front  { width: calc(var(--w) * 1px); height: calc(var(--h) * 1px); margin: calc(var(--h) * -0.5px) 0 0 calc(var(--w) * -0.5px); transform: translateZ(calc(var(--d) * 0.5px)); background-image: url('../img/daily/cara-frontal.jpg'); }
+    .f-back   { width: calc(var(--w) * 1px); height: calc(var(--h) * 1px); margin: calc(var(--h) * -0.5px) 0 0 calc(var(--w) * -0.5px); transform: rotateY(180deg) translateZ(calc(var(--d) * 0.5px)); background-image: url('../img/daily/cara-trasera.jpg'); }
+    .f-right  { width: calc(var(--d) * 1px); height: calc(var(--h) * 1px); margin: calc(var(--h) * -0.5px) 0 0 calc(var(--d) * -0.5px); transform: rotateY(90deg) translateZ(calc(var(--w) * 0.5px)); background-image: url('../img/daily/cara-lado-b.jpg'); }
+    .f-left   { width: calc(var(--d) * 1px); height: calc(var(--h) * 1px); margin: calc(var(--h) * -0.5px) 0 0 calc(var(--d) * -0.5px); transform: rotateY(-90deg) translateZ(calc(var(--w) * 0.5px)); background-image: url('../img/daily/cara-lado-a.jpg'); }
+    .f-top    { width: calc(var(--w) * 1px); height: calc(var(--d) * 1px); margin: calc(var(--d) * -0.5px) 0 0 calc(var(--w) * -0.5px); transform: rotateX(90deg) translateZ(calc(var(--h) * 0.5px)); background-image: url('../img/daily/cara-tapa.jpg'); }
+    .f-bottom { width: calc(var(--w) * 1px); height: calc(var(--d) * 1px); margin: calc(var(--d) * -0.5px) 0 0 calc(var(--w) * -0.5px); transform: rotateX(-90deg) translateZ(calc(var(--h) * 0.5px)); background: #93326E; }
+
+    /* sombra en el piso */
+    .floor-shadow {
+      position: absolute;
+      left: 50%;
+      top: 52%;
+      width: 380px;
+      height: 80px;
+      transform: translate(-50%, 165px);
+      background: radial-gradient(ellipse at center, rgba(33, 29, 36, 0.28) 0%, transparent 68%);
+      filter: blur(6px);
+      pointer-events: none;
+    }
+
+    /* controles */
+    .viewer-controls {
+      max-width: 860px;
+      margin: 22px auto 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .vbtn {
+      background: none;
+      border: 1px solid var(--ink);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      padding: 10px 18px;
+      cursor: pointer;
+      transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .vbtn:hover { color: var(--accent); border-color: var(--accent); }
+
+    .vbtn.active {
+      background: var(--ink);
+      color: var(--bg);
+      border-color: var(--ink);
+    }
+
+    .viewer-hint {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      color: var(--ink-muted);
+    }
+
+    .ficha {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 28px;
+      margin-top: 8px;
+    }
+
+    .ficha dt {
+      font-size: 11.5px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .ficha dd {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--ink-soft);
+      line-height: 1.6;
+    }
+
+    @media (max-width: 640px) {
+      .stage { height: 380px; }
+      .scene { transform: scale(0.78); }
+      .floor-shadow { transform: translate(-50%, 130px) scale(0.78); }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="pnav">
+    <div class="pnav__inner">
+      <a href="../index.html#proyectos" class="pnav__back">← Volver al portafolio</a>
+      <a href="../index.html" class="pnav__brand">Daniela Ruiz<span>.</span></a>
+    </div>
+  </nav>
+
+  <header class="phero">
+    <div class="phero__number">02</div>
+    <p class="phero__category">Branding · Packaging</p>
+    <h1 class="phero__title">Daily Confort</h1>
+    <p class="phero__lead">Proyecto orientado al bienestar cotidiano de mujeres que realizan diálisis peritoneal. Se desarrolló la identidad visual, el logo, la paleta de colores y la propuesta de packaging, construyendo una comunicación cercana, cuidadosa y coherente con el propósito del producto.</p>
+  </header>
+
+  <section class="psection psection--full stage-wrap" aria-label="Mockup 3D del packaging">
+    <div class="stage" id="stage">
+      <div class="floor-shadow"></div>
+      <div class="scene">
+        <div class="box" id="box">
+          <div class="face f-front"></div>
+          <div class="face f-back"></div>
+          <div class="face f-right"></div>
+          <div class="face f-left"></div>
+          <div class="face f-top"></div>
+          <div class="face f-bottom"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="viewer-controls" role="group" aria-label="Vistas de la caja">
+      <button class="vbtn" data-view="front">Frontal</button>
+      <button class="vbtn" data-view="back">Reverso</button>
+      <button class="vbtn" data-view="side">Lateral</button>
+      <button class="vbtn" data-view="top">Superior</button>
+      <button class="vbtn" data-view="iso">Perspectiva</button>
+      <button class="vbtn" id="btnSpin">Girar ⟳</button>
+      <button class="vbtn" data-zoom="../img/daily/pliego.png">Ver pliego</button>
+    </div>
+    <p class="viewer-hint">Arrastra sobre la caja para rotarla libremente · el arte de cada cara es el del pliego real</p>
+  </section>
+
+  <section class="psection">
+    <h2 class="psection__title">La propuesta</h2>
+    <p class="psection__note">Renders del packaging y pliego de la caja. Haz clic en cualquier imagen para ampliarla.</p>
+    <div class="pgrid">
+      <figure class="pcard">
+        <img src="../img/proyecto-02-daily-confort.png" alt="Render frontal de la caja Daily Confort" loading="lazy">
+        <figcaption>Render · cara frontal</figcaption>
+      </figure>
+      <figure class="pcard">
+        <img src="../img/daily/render-duo.png" alt="Dos cajas Daily Confort en perspectiva" loading="lazy">
+        <figcaption>Render · vista en perspectiva</figcaption>
+      </figure>
+      <figure class="pcard">
+        <img src="../img/daily/render-caras.png" alt="Caras de la caja con iconografía y modo de uso" loading="lazy">
+        <figcaption>Render · caras y atributos</figcaption>
+      </figure>
+      <figure class="pcard">
+        <img src="../img/daily/pliego.png" alt="Pliego con el arte de la caja Daily Confort" loading="lazy">
+        <figcaption>Pliego · arte de impresión</figcaption>
+      </figure>
+      <figure class="pcard">
+        <img src="../img/daily/troquel.jpg" alt="Troquel de la caja: corte, plegado y sangrado" loading="lazy">
+        <figcaption>Troquel · azul corte / rojo plegado / verde sangrado</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="psection">
+    <h2 class="psection__title">Sobre el mockup</h2>
+    <p class="psection__note">El modelo 3D se construyó a partir de los archivos originales del packaging: las proporciones salen del troquel (líneas de corte, plegado y sangrado) y el arte de cada cara del pliego de impresión — frontal con la marca, la ventana troquelada al producto y la ficha «Calzón»; reverso con el modo de uso; laterales con atributos y avisos; y tapa con el monograma. Funciona sin conexión y sin servicios externos. Por encontrarse el proyecto en proceso de protección intelectual, el detalle técnico del producto se mantiene reservado.</p>
+    <dl class="ficha">
+      <div><dt>Rol</dt><dd>Identidad visual · packaging estructural y gráfico</dd></div>
+      <div><dt>Área</dt><dd>Branding · Packaging · Salud</dd></div>
+      <div><dt>Entregables</dt><dd>Logo, paleta, tipografías, pliego y aplicación en caja</dd></div>
+      <div><dt>Estado</dt><dd>En proceso de protección intelectual</dd></div>
+    </dl>
+  </section>
+
+  <footer class="pfooter">
+    <div class="pfooter__inner">
+      <span>© 2026 Daniela Ruiz Ardiles</span>
+      <a href="monarch.html" class="pfooter__next">Siguiente proyecto: Pijamas Monarch →</a>
+    </div>
+  </footer>
+
+  <script>
+    var box = document.getElementById('box');
+    var stage = document.getElementById('stage');
+    var btnSpin = document.getElementById('btnSpin');
+
+    var rotX = -14, rotY = -32;
+    var spinning = false;
+    var spinId = null;
+
+    function apply() {
+      box.style.transform = 'rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg)';
+    }
+
+    var views = {
+      front: { x: -4,  y: 0 },
+      back:  { x: -4,  y: 180 },
+      side:  { x: -4,  y: -90 },
+      top:   { x: -80, y: 0 },
+      iso:   { x: -14, y: -32 }
+    };
+
+    document.querySelectorAll('.vbtn[data-view]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        stopSpin();
+        box.classList.remove('no-anim');
+        var v = views[b.dataset.view];
+        rotX = v.x;
+        rotY = v.y;
+        apply();
+        document.querySelectorAll('.vbtn[data-view]').forEach(function (x) {
+          x.classList.toggle('active', x === b);
+        });
+      });
+    });
+
+    function stopSpin() {
+      spinning = false;
+      btnSpin.classList.remove('active');
+      if (spinId) { cancelAnimationFrame(spinId); spinId = null; }
+    }
+
+    btnSpin.addEventListener('click', function () {
+      spinning = !spinning;
+      btnSpin.classList.toggle('active', spinning);
+      if (spinning) {
+        box.classList.add('no-anim');
+        (function tick() {
+          if (!spinning) return;
+          rotY += 0.35;
+          apply();
+          spinId = requestAnimationFrame(tick);
+        })();
+      } else {
+        stopSpin();
+      }
+    });
+
+    var dragging = false, lastX = 0, lastY = 0;
+
+    stage.addEventListener('pointerdown', function (e) {
+      dragging = true;
+      stopSpin();
+      lastX = e.clientX;
+      lastY = e.clientY;
+      stage.classList.add('dragging');
+      box.classList.add('no-anim');
+      stage.setPointerCapture(e.pointerId);
+    });
+
+    stage.addEventListener('pointermove', function (e) {
+      if (!dragging) return;
+      rotY += (e.clientX - lastX) * 0.45;
+      rotX -= (e.clientY - lastY) * 0.45;
+      rotX = Math.max(-88, Math.min(88, rotX));
+      lastX = e.clientX;
+      lastY = e.clientY;
+      apply();
+    });
+
+    ['pointerup', 'pointercancel'].forEach(function (ev) {
+      stage.addEventListener(ev, function () {
+        dragging = false;
+        stage.classList.remove('dragging');
+      });
+    });
+
+    apply();
+  </script>
+  <script src="../js/lightbox.js"></script>
+</body>
+</html>
