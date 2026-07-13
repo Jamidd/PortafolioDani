@@ -1,1 +1,9 @@
+# Build output — Netlify regenerates dist/ from source via netlify-build.sh
+dist/
+
+# Archivos fuente pesados que no se publican
 Descargas/Mediterranea a la Chilena.pdf
+
+# Sistema / editor
+.DS_Store
+Thumbs.db
