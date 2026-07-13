@@ -82,7 +82,26 @@
       display: flex;
       align-items: flex-start;
       justify-content: center;
+      gap: 56px;
       overflow: hidden;
+    }
+
+    .hang__label {
+      margin-top: 44px;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+
+    .demo-fixed {
+      margin: 0;
+      font-size: 13px;
+      color: var(--ink-soft);
+      border: 1px dashed var(--border);
+      border-radius: 999px;
+      padding: 8px 14px;
+      display: inline-block;
     }
 
     .rack__bar {
@@ -115,8 +134,8 @@
       box-shadow: 0 22px 34px rgba(33, 29, 36, 0.22);
     }
 
-    /* en vista perfil el bulto es tan ancho como su grosor */
-    .rack[data-view="perfil"] .bundle { width: calc(var(--bt) * 2.2); border-radius: 14px; }
+    /* el bulto de perfil es tan ancho como su grosor */
+    .bundle--perfil { width: calc(var(--bt) * 2.2); border-radius: 14px; }
 
     /* telas */
     .bundle.plush {
@@ -256,6 +275,34 @@
     .adhesive--a { top: 12%; }
     .adhesive--b { bottom: 12%; }
 
+    /* cota inferior: ancho total (x cm) */
+    .width-measure {
+      position: absolute;
+      left: -14px;
+      right: -14px;
+      bottom: -34px;
+      text-align: center;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      border-top: 1px solid var(--ink-muted);
+      padding-top: 6px;
+    }
+
+    .width-measure::before,
+    .width-measure::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      width: 1px;
+      height: 8px;
+      background: var(--ink-muted);
+    }
+
+    .width-measure::before { left: 0; }
+    .width-measure::after { right: 0; }
+
     .adhesive::after {
       content: "sello";
       position: absolute;
@@ -344,12 +391,6 @@
 
     .tag__brand { font-size: 8px; letter-spacing: 0.12em; }
 
-    /* visibilidad por vista */
-    .rack .only-frontal, .rack .only-reverso, .rack .only-perfil { display: none; }
-    .rack[data-view="frontal"] .only-frontal { display: flex; }
-    .rack[data-view="reverso"] .only-reverso { display: flex; }
-    .rack[data-view="perfil"]  .only-perfil  { display: flex; }
-
     .demo-caption {
       max-width: 1020px;
       margin: 20px auto 0;
@@ -402,8 +443,12 @@
 
     @media (max-width: 900px) {
       .demo { grid-template-columns: 1fr; gap: 24px; }
-      .rack { height: 470px; }
+      .rack { height: 470px; gap: 28px; }
       .demo-controls { order: 2; }
+    }
+
+    @media (max-width: 480px) {
+      .rack { gap: 16px; }
     }
   </style>
 </head>
@@ -429,58 +474,29 @@
         <div class="demo-group">
           <h3>Tela</h3>
           <div class="chip-row" id="fabricRow">
-            <button class="chip active" data-fabric="plush" data-label="Plush">Plush</button>
-            <button class="chip" data-fabric="algodon" data-label="Algodón">Algodón</button>
+            <button class="chip active" data-fabric="algodon" data-label="Algodón">Algodón</button>
+            <button class="chip" data-fabric="plush" data-label="Plush">Plush</button>
             <button class="chip" data-fabric="polar" data-label="Polar">Polar</button>
           </div>
         </div>
         <div class="demo-group">
           <h3>Talla</h3>
-          <div class="chip-row" id="sizeRow">
-            <button class="chip" data-size="S">S</button>
-            <button class="chip active" data-size="M">M</button>
-            <button class="chip" data-size="L">L</button>
-            <button class="chip" data-size="XL">XL</button>
-          </div>
-        </div>
-        <div class="demo-group">
-          <h3>Vista</h3>
-          <div class="chip-row" id="viewRow">
-            <button class="chip active" data-view="frontal">Frontal</button>
-            <button class="chip" data-view="reverso">Reverso</button>
-            <button class="chip" data-view="perfil">Perfil</button>
-          </div>
+          <p class="demo-fixed">Talla S · rango único de la demo</p>
         </div>
         <div class="demo-readout" id="readout"></div>
       </div>
 
-      <div class="rack" id="rack" data-view="frontal" aria-hidden="true">
+      <div class="rack" id="rack" aria-hidden="true">
         <div class="rack__bar"></div>
-        <div class="hang">
+
+        <!-- REVERSO: solapa + sellos que se desplazan -->
+        <div class="hang hang--reverso">
           <svg class="hook" viewBox="0 0 46 42" fill="none">
             <path d="M23 40 C 4 34, 4 20, 14 16 C 22 13, 30 17, 30 24 C 30 29, 25 31, 21 29"
                   stroke="#2a2a2e" stroke-width="4" stroke-linecap="round" fill="none" transform="rotate(180 23 21)"/>
           </svg>
-          <div class="bundle plush" id="bundle">
-
-            <!-- FRONTAL: panel gráfico + tabela -->
-            <div class="band only-frontal">
-              <div class="band__panel">
-                <div class="band__nuevo">Nuevo</div>
-                <div class="band__pijamas">Pijamas</div>
-                <div class="band__sub">cómodos | extra suaves</div>
-                <div class="band__monarch">Monarch<span style="font-size:7px;">·esencial</span></div>
-                <div class="band__talla"><small>talla</small><span class="tallaBadge">M</span></div>
-              </div>
-            </div>
-            <div class="tag only-frontal">
-              <div class="tag__fabric" id="tagFabric">Plush</div>
-              <div class="tag__fig"></div>
-              <div class="tag__brand">Monarch</div>
-            </div>
-
-            <!-- REVERSO: solapa + adhesivos que se desplazan -->
-            <div class="band band--reverso only-reverso">
+          <div class="bundle algodon" id="bundleBack">
+            <div class="band band--reverso">
               <div class="band__info-back">
                 <div class="box">Esta es nuestra nueva línea de pijamas Monarch —
                 info legal · monarch.cl</div>
@@ -489,15 +505,26 @@
               <div class="adhesive adhesive--a" id="adhA"></div>
               <div class="adhesive adhesive--b" id="adhB"></div>
             </div>
-
-            <!-- PERFIL: grosor -->
-            <div class="band band--perfil only-perfil"></div>
-            <div class="depth-arrow only-perfil"><span id="mmLabel">42 mm</span></div>
+            <div class="width-measure">x cm</div>
           </div>
+          <span class="hang__label">Reverso</span>
+        </div>
+
+        <!-- PERFIL: grosor -->
+        <div class="hang hang--perfil">
+          <svg class="hook" viewBox="0 0 46 42" fill="none">
+            <path d="M23 40 C 4 34, 4 20, 14 16 C 22 13, 30 17, 30 24 C 30 29, 25 31, 21 29"
+                  stroke="#2a2a2e" stroke-width="4" stroke-linecap="round" fill="none" transform="rotate(180 23 21)"/>
+          </svg>
+          <div class="bundle algodon bundle--perfil" id="bundleSide">
+            <div class="band band--perfil"></div>
+            <div class="depth-arrow"><span id="mmLabel">24 mm</span></div>
+          </div>
+          <span class="hang__label">Lateral</span>
         </div>
       </div>
     </div>
-    <p class="demo-caption">Demo del concepto: el mismo arte de huincha para todas las telas. En el reverso, los sellos adhesivos transparentes se desplazan según el grosor de la prenda.</p>
+    <p class="demo-caption">Demo del concepto en talla S: la misma huincha para todas las telas. Al cambiar el material se ven a la vez el reverso —donde los sellos adhesivos, siempre a la misma distancia del borde de la solapa, se desplazan con el grosor— y el lateral, que muestra el volumen que absorbe la huincha.</p>
   </section>
 
   <section class="psection">
@@ -582,63 +609,45 @@
   </footer>
 
   <script>
-    var rack = document.getElementById('rack');
-    var bundle = document.getElementById('bundle');
-    var tagFabric = document.getElementById('tagFabric');
+    var bundles = document.querySelectorAll('.bundle');
     var readout = document.getElementById('readout');
     var mmLabel = document.getElementById('mmLabel');
 
-    var state = { fabric: 'plush', size: 'M', view: 'frontal' };
+    var state = { fabric: 'algodon' };
 
-    // ancho/alto del bulto por talla (px de la escena)
-    var sizes = {
-      S:  { w: 210, h: 260, f: 0.85 },
-      M:  { w: 250, h: 300, f: 1.0 },
-      L:  { w: 285, h: 330, f: 1.15 },
-      XL: { w: 320, h: 360, f: 1.3 }
-    };
+    // rango único de la demo: talla S
+    var sizeS = { w: 210, h: 260, f: 0.85 };
 
-    // grosor base por tela (px de la escena)
+    // grosor base por tela (px de la escena) — se mantiene según lo ya definido
     var thickness = { algodon: 26, plush: 40, polar: 56 };
+
+    // posición del sello como fracción del ancho x (según el mockup)
+    var sealFrac = { algodon: 0.2, plush: 0.4, polar: 0.5 };
 
     var fabricNames = { plush: 'Plush', algodon: 'Algodón', polar: 'Polar' };
 
     function update() {
-      var s = sizes[state.size];
-      var t = Math.round(thickness[state.fabric] * s.f);
-      var tMax = Math.round(thickness.polar * s.f);
+      var t = Math.round(thickness[state.fabric] * sizeS.f);
+      var bandWidth = sizeS.w + 28;                 // la huincha sobresale 14px por lado
+      var frac = sealFrac[state.fabric];
+      var edge = Math.round(bandWidth * frac);      // los sellos siguen el borde de la solapa
 
-      // la huincha de cada talla se dimensiona para la tela más gruesa (polar);
-      // con telas más delgadas la solapa de cierre es más larga y los
-      // adhesivos quedan más adentro del reverso
-      var overlap = 46 + 2 * (tMax - t);
-
-      bundle.style.setProperty('--bw', s.w + 'px');
-      bundle.style.setProperty('--bh', s.h + 'px');
-      bundle.style.setProperty('--bt', t + 'px');
-      bundle.style.setProperty('--edge', overlap + 'px');
-
-      bundle.classList.remove('plush', 'algodon', 'polar');
-      bundle.classList.add(state.fabric);
-
-      rack.dataset.view = state.view;
-
-      tagFabric.textContent = fabricNames[state.fabric];
-      document.querySelectorAll('.tallaBadge').forEach(function (b) { b.textContent = state.size; });
+      bundles.forEach(function (b) {
+        b.style.setProperty('--bw', sizeS.w + 'px');
+        b.style.setProperty('--bh', sizeS.h + 'px');
+        b.style.setProperty('--bt', t + 'px');
+        b.style.setProperty('--edge', edge + 'px');
+        b.classList.remove('plush', 'algodon', 'polar');
+        b.classList.add(state.fabric);
+      });
 
       var mm = Math.round(t * 1.1);
       mmLabel.textContent = mm + ' mm';
 
-      var solapaCm = (overlap * 0.045).toFixed(1);
       readout.innerHTML =
-        '<b>' + fabricNames[state.fabric] + ' · talla ' + state.size + '</b><br>' +
+        '<b>' + fabricNames[state.fabric] + ' · talla S</b><br>' +
         'Grosor de la prenda: <b>' + mm + ' mm</b><br>' +
-        'Solapa de cierre: <b>' + solapaCm + ' cm</b><br>' +
-        (state.view === 'reverso'
-          ? 'Los sellos adhesivos siguen el borde de la solapa: a más grosor, menos solapa.'
-          : state.view === 'perfil'
-            ? 'El perfil muestra cuánto volumen debe absorber la misma huincha.'
-            : 'El arte de la huincha no cambia: solo la talla impresa.');
+        'Los sellos van pegados al borde de la solapa —a distancia constante de él— y se desplazan cuando cambia el grosor. El lateral muestra el volumen que absorbe la misma huincha.';
     }
 
     document.querySelectorAll('#fabricRow .chip').forEach(function (b) {
@@ -646,24 +655,6 @@
         document.querySelectorAll('#fabricRow .chip').forEach(function (x) { x.classList.remove('active'); });
         b.classList.add('active');
         state.fabric = b.dataset.fabric;
-        update();
-      });
-    });
-
-    document.querySelectorAll('#sizeRow .chip').forEach(function (b) {
-      b.addEventListener('click', function () {
-        document.querySelectorAll('#sizeRow .chip').forEach(function (x) { x.classList.remove('active'); });
-        b.classList.add('active');
-        state.size = b.dataset.size;
-        update();
-      });
-    });
-
-    document.querySelectorAll('#viewRow .chip').forEach(function (b) {
-      b.addEventListener('click', function () {
-        document.querySelectorAll('#viewRow .chip').forEach(function (x) { x.classList.remove('active'); });
-        b.classList.add('active');
-        state.view = b.dataset.view;
         update();
       });
     });
