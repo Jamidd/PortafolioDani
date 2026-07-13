@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Tipografías del design system de Lyssa (solo para los especímenes) -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Roboto+Mono:wght@400;500&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/styles.css">
   <link rel="stylesheet" href="../css/proyecto.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90' font-family='serif' fill='%237C3A62'>D.</text></svg>">
@@ -178,8 +180,134 @@
 
     .ficha dd { margin: 0; font-size: 15px; font-weight: 300; color: var(--ink-soft); line-height: 1.6; }
 
+    /* ── Sistema de diseño ── */
+    .ds-sub {
+      margin: 30px 0 14px;
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    /* marca */
+    .brand-logo {
+      max-width: 300px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 22px 26px;
+    }
+    .brand-logo svg { width: 100%; height: auto; display: block; }
+
+    /* tipografía */
+    .type-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+      gap: 20px;
+    }
+    .type-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px 22px;
+      background: #fff;
+    }
+    .type-card__role {
+      margin: 0 0 14px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .ds-specimen { margin: 0 0 4px; font-size: clamp(30px, 5vw, 44px); line-height: 1; color: var(--ink); }
+    .ds-alpha { margin: 0 0 16px; font-size: 15px; letter-spacing: 0.04em; color: var(--ink-muted); }
+    .type-card__meta { margin: 0; font-size: 13px; color: var(--ink-soft); }
+
+    .ds-display { font-family: "Montserrat", var(--sans); font-weight: 800; }
+    .ds-body    { font-family: "Roboto", var(--sans); font-weight: 700; }
+    .ds-mono    { font-family: "Roboto Mono", monospace; font-weight: 500; }
+
+    /* color · modos */
+    .ds-modes { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .ds-mode { border: 1px solid var(--border); border-radius: 10px; padding: 22px 22px 24px; }
+    .ds-mode--light { background: #F2F4F7; }
+    .ds-mode--dark  { background: #0A0E65; border-color: #2A2F94; }
+
+    .ds-mode__label { margin: 0 0 4px; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+    .ds-mode--light .ds-mode__label { color: #00539A; }
+    .ds-mode--dark  .ds-mode__label { color: #FEBE10; }
+    .ds-mode__note { margin: 0 0 18px; font-size: 12.5px; line-height: 1.5; }
+    .ds-mode--light .ds-mode__note { color: #4A5270; }
+    .ds-mode--dark  .ds-mode__note { color: #AEB4E8; }
+
+    .ds-chips { display: grid; grid-template-columns: repeat(auto-fit, minmax(84px, 1fr)); gap: 12px; }
+    .ds-chip { margin: 0; }
+    .ds-chip__sw { height: 50px; border-radius: 6px; }
+    .ds-mode--light .ds-chip__sw { border: 1px solid rgba(10,14,101,0.12); }
+    .ds-mode--dark  .ds-chip__sw { border: 1px solid rgba(255,255,255,0.16); }
+    .ds-chip__name { margin: 7px 0 0; font-size: 11.5px; font-weight: 600; line-height: 1.2; }
+    .ds-chip__hex { font-size: 10.5px; letter-spacing: 0.03em; text-transform: uppercase; }
+    .ds-mode--light .ds-chip__name { color: #0A0E65; }
+    .ds-mode--light .ds-chip__hex { color: #4A5270; }
+    .ds-mode--dark  .ds-chip__name { color: #E7E9FB; }
+    .ds-mode--dark  .ds-chip__hex { color: #AEB4E8; }
+
     @media (max-width: 720px) {
       .modules { grid-template-columns: 1fr; }
+      .ds-modes { grid-template-columns: 1fr; }
+    }
+
+    /* Propuesta visual — showcase dinámico (pantallas flotando, no encuadradas) */
+    .showcase {
+      position: relative;
+      margin-top: 24px;
+      padding: 20px 24px 60px;
+      background: none;
+      isolation: isolate;
+    }
+    .stage {
+      position: relative;
+      z-index: 1;
+      max-width: 1040px;
+      margin: 0 auto;
+      aspect-ratio: 16 / 10;
+    }
+    .shot {
+      position: absolute;
+      margin: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 32px 64px -22px rgba(0,0,0,0.55), 0 6px 18px rgba(0,0,0,0.34);
+      transition: transform .45s cubic-bezier(.2,.7,.2,1), box-shadow .45s, z-index 0s;
+      cursor: zoom-in;
+    }
+    .shot img { display: block; width: 100%; height: auto; }
+    .shot:hover {
+      transform: rotate(0deg) scale(1.035) !important;
+      box-shadow: 0 44px 84px -20px rgba(0,0,0,0.62);
+      z-index: 30 !important;
+    }
+    .shot--web1 { width: 55%; top: 3%;  left: -1%; transform: rotate(-3.6deg); z-index: 2; }
+    .shot--web2 { width: 57%; top: 24%; left: auto; right: -1%; transform: rotate(2.8deg); z-index: 3; }
+    .shot--phone { width: 14.5%; border-radius: 18px; box-shadow: 0 26px 46px -16px rgba(0,0,0,0.6); cursor: default; }
+    .shot--pl { bottom: 3%;  left: 21%; transform: rotate(-7deg); z-index: 4; }
+    .shot--pd { bottom: -4%; left: 35%; transform: rotate(6deg);  z-index: 5; }
+
+    .showcase__cap {
+      position: relative; z-index: 1;
+      margin: 76px auto 0; max-width: 720px; text-align: center;
+      color: var(--muted, #6b6b6b); font-size: 12.5px; line-height: 1.6;
+    }
+
+    @media (max-width: 760px) {
+      .showcase { padding: 26px 16px 30px; }
+      .showcase__wm { display: none; }
+      .stage { aspect-ratio: auto; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+      .shot { position: static; width: 92% !important; transform: rotate(0deg) !important; }
+      .shot--phone { width: 58% !important; }
     }
   </style>
 </head>
@@ -243,24 +371,85 @@
 
   <section class="psection">
     <h2 class="psection__title">Propuesta visual original</h2>
-    <p class="psection__note">Láminas del trabajo de diseño para ReportApp/ControlApp: la app del guardia en terreno y las interfaces en modo claro y oscuro. Haz clic para ampliar.</p>
-    <div class="pgrid">
-      <figure class="pcard">
-        <img src="../img/lyssa/web-01.jpg" alt="Lámina: la app del guardia en terreno" loading="lazy">
-        <figcaption>La app del guardia en terreno</figcaption>
-      </figure>
-      <figure class="pcard">
-        <img src="../img/lyssa/web-02.jpg" alt="Lámina: interfaces en modo claro y modo oscuro" loading="lazy">
-        <figcaption>Modo claro / modo oscuro</figcaption>
-      </figure>
-      <figure class="pcard">
-        <img src="../img/lyssa/lyssa-phone-light.png" alt="Mockup de la app en modo claro" loading="lazy">
-        <figcaption>Reporte de rondas · modo claro</figcaption>
-      </figure>
-      <figure class="pcard">
-        <img src="../img/lyssa/lyssa-phone-dark.png" alt="Mockup de la app en modo oscuro" loading="lazy">
-        <figcaption>Reporte de rondas · modo oscuro</figcaption>
-      </figure>
+    <p class="psection__note">Láminas del trabajo de diseño para ReportApp / ControlApp: la app del guardia en terreno y las interfaces en modo claro y oscuro.</p>
+    <div class="showcase">
+      <div class="stage">
+        <figure class="shot shot--web1">
+          <img src="../img/lyssa/web-01.jpg" alt="Lámina: la app del guardia en terreno" data-zoom="../img/lyssa/web-01.jpg" loading="lazy">
+        </figure>
+        <figure class="shot shot--web2">
+          <img src="../img/lyssa/web-02.jpg" alt="Lámina: interfaces en modo claro y modo oscuro" data-zoom="../img/lyssa/web-02.jpg" loading="lazy">
+        </figure>
+        <figure class="shot shot--phone shot--pl">
+          <img src="../img/lyssa/lyssa-phone-light.png" alt="Mockup de la app en modo claro" loading="lazy">
+        </figure>
+        <figure class="shot shot--phone shot--pd">
+          <img src="../img/lyssa/lyssa-phone-dark.png" alt="Mockup de la app en modo oscuro" loading="lazy">
+        </figure>
+      </div>
+      <p class="showcase__cap">Composición de pantallas de la propuesta · haz clic en las láminas para ampliarlas.</p>
+    </div>
+  </section>
+
+  <section class="psection">
+    <h2 class="psection__title">Sistema de diseño</h2>
+    <p class="psection__note">Sistema visual diseñado para mantener claridad, coherencia y legibilidad en distintos contextos de uso. La tipografía organiza la información y la paleta se adapta a los modos diurno y nocturno, incorporando contrastes y colores de estado que facilitan una navegación rápida y segura.</p>
+
+    <h3 class="ds-sub">Marca</h3>
+    <div class="brand-logo">
+      <svg viewBox="510 110 790 745" role="img" aria-label="Logotipo de Lyssa">
+        <image href="../img/lyssa/logo.svg" x="0" y="0" width="1920" height="1080"/>
+      </svg>
+    </div>
+
+    <h3 class="ds-sub">Tipografía</h3>
+    <div class="type-grid">
+      <div class="type-card">
+        <p class="type-card__role">Display · títulos</p>
+        <p class="ds-specimen ds-display">Montserrat</p>
+        <p class="ds-alpha ds-display">Aa Bb Cc 0123</p>
+        <p class="type-card__meta">Montserrat · pesos 600 / 700 / 800</p>
+      </div>
+      <div class="type-card">
+        <p class="type-card__role">Cuerpo · UI</p>
+        <p class="ds-specimen ds-body">Roboto</p>
+        <p class="ds-alpha ds-body">Aa Bb Cc 0123</p>
+        <p class="type-card__meta">Roboto · pesos 400 / 500 / 700</p>
+      </div>
+      <div class="type-card">
+        <p class="type-card__role">Datos · IDs · hora</p>
+        <p class="ds-specimen ds-mono">Roboto Mono</p>
+        <p class="ds-alpha ds-mono">Aa Bb Cc 0123</p>
+        <p class="type-card__meta">Roboto Mono · pesos 400 / 500</p>
+      </div>
+    </div>
+
+    <h3 class="ds-sub">Color · modo claro / modo oscuro</h3>
+    <div class="ds-modes">
+      <div class="ds-mode ds-mode--light">
+        <p class="ds-mode__label">Modo claro · turno de día</p>
+        <p class="ds-mode__note">Exterior y uso al sol · contraste ≥ 7:1. Acento por contraste: azul.</p>
+        <div class="ds-chips">
+          <figure class="ds-chip"><div class="ds-chip__sw" style="background:#F2F4F7;"></div><figcaption><p class="ds-chip__name">Papel</p><p class="ds-chip__hex">#F2F4F7</p></figcaption></figure>
+          <figure class="ds-chip"><div class="ds-chip__sw" style="background:#FFFFFF;"></div><figcaption><p class="ds-chip__name">Superficie</p><p class="ds-chip__hex">#FFFFFF</p></figcaption></figure>
+          <figure class="ds-chip"><div class="ds-chip__sw" style="background:#0A0E65;"></div><figcaption><p class="ds-chip__name">Tinta</p><p class="ds-chip__hex">#0A0E65</p></figcaption></figure>
+          <figure class="ds-chip"><div class="ds-chip__sw" style="background:#00539A;"></div><figcaption><p class="ds-chip__name">Acento</p><p class="ds-chip__hex">#00539A</p></figcaption></figure>
+          <figure class="ds-chip"><div class="ds-chip__sw" style="background:#1F8A4C;"></div><figcaption><p class="ds-chip__name">Éxito</p><p class="ds-chip__hex">#1F8A4C</p></figcaption></figure>
+          <figure class="ds-chip"><div class="ds-chip__sw" style="background:#C23B2E;"></div><figcaption><p class="ds-chip__name">Peligro</p><p class="ds-chip__hex">#C23B2E</p></figcaption></figure>
+        </div>
+      </div>
+      <div class="ds-mode ds-mode--dark">
+        <p class="ds-mode__label">Modo oscuro · turno de noche</p>
+        <p class="ds-mode__note">Rondas nocturnas · baja iluminación · contraste ≈ 10:1. Acento por contraste: dorado.</p>
+        <div class="ds-chips">
+          <figure class="ds-chip"><div class="ds-chip__sw" style="background:#0A0E65;"></div><figcaption><p class="ds-chip__name">Fondo</p><p class="ds-chip__hex">#0A0E65</p></figcaption></figure>
+          <figure class="ds-chip"><div class="ds-chip__sw" style="background:#0B0D3E;"></div><figcaption><p class="ds-chip__name">Superficie</p><p class="ds-chip__hex">#0B0D3E</p></figcaption></figure>
+          <figure class="ds-chip"><div class="ds-chip__sw" style="background:#BDBFC1;"></div><figcaption><p class="ds-chip__name">Texto</p><p class="ds-chip__hex">#BDBFC1</p></figcaption></figure>
+          <figure class="ds-chip"><div class="ds-chip__sw" style="background:#FEBE10;"></div><figcaption><p class="ds-chip__name">Acento</p><p class="ds-chip__hex">#FEBE10</p></figcaption></figure>
+          <figure class="ds-chip"><div class="ds-chip__sw" style="background:#47BF7D;"></div><figcaption><p class="ds-chip__name">Éxito</p><p class="ds-chip__hex">#47BF7D</p></figcaption></figure>
+          <figure class="ds-chip"><div class="ds-chip__sw" style="background:#E5675B;"></div><figcaption><p class="ds-chip__name">Peligro</p><p class="ds-chip__hex">#E5675B</p></figcaption></figure>
+        </div>
+      </div>
     </div>
   </section>
 
