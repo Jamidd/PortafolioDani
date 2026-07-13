@@ -11,6 +11,13 @@
   var img = overlay.querySelector('img');
 
   function open(src, alt) {
+    // Nunca ampliar más allá de la resolución nativa (evita el pixelado)
+    img.style.maxWidth = '';
+    img.style.maxHeight = '';
+    img.onload = function () {
+      img.style.maxWidth = 'min(100%, ' + img.naturalWidth + 'px)';
+      img.style.maxHeight = 'min(100%, ' + img.naturalHeight + 'px)';
+    };
     img.src = src;
     img.alt = alt || 'Imagen ampliada';
     overlay.classList.add('open');
