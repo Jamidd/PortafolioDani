@@ -1,0 +1,42 @@
+/* ════════════════════════════════════════════════════════════════════════
+   Lyssa · Typography
+   Títulos: Montserrat 600/700/800 · Cuerpo: Roboto 400/600 · Datos: Roboto Mono
+   Nunca Inter, ni Roboto solo para títulos, ni fuentes fuera de esta lista.
+   ════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Familias ──────────────────────────────────────────── */
+  --font-display: "Montserrat", Helvetica, Arial, sans-serif;  /* títulos */
+  --font-body:    "Roboto", Helvetica, Arial, sans-serif;      /* cuerpo / UI */
+  --font-mono:    "Roboto Mono", Consolas, monospace;          /* IDs, hora, datos */
+
+  /* ── Pesos ──────────────────────────────────── @kind font */
+  --fw-regular:  400; /* @kind font */
+  --fw-medium:   500; /* @kind font */
+  --fw-semibold: 600; /* @kind font */
+  --fw-bold:     700; /* @kind font */
+  --fw-black:    800; /* @kind font */
+
+  /* ── Escala (px) ───────────────────────────────────────── */
+  --fs-display: 58px;   /* portadas, hero      · Montserrat 800 */
+  --fs-h1:      40px;   /* sección principal   · Montserrat 700 */
+  --fs-h2:      30px;   /* subsección          · Montserrat 700 */
+  --fs-h3:      22px;   /* tarjeta / panel     · Montserrat 600 */
+  --fs-h4:      16px;   /* etiqueta de sección · Montserrat 600 (sin mayúsculas) */
+  --fs-body:    16px;   /* texto largo         · Roboto 400/600 */
+  --fs-body-sm: 14px;   /* texto compacto      · Roboto */
+  --fs-caption: 13px;   /* metadatos, ayudas   · Roboto 500 */
+  --fs-mono:    14px;   /* timestamps, IDs, encabezados de tabla · Roboto Mono 500 caps */
+  --fs-kicker:  9px;    /* kicker / overline   · Roboto Mono 500 caps */
+
+  /* ── Interlineado ───────────────────────────── @kind font */
+  --lh-tight:   1.1;  /* @kind font */
+  --lh-heading: 1.2;  /* @kind font */
+  --lh-body:    1.65; /* @kind font */
+  --lh-compact: 1.45; /* @kind font */
+
+  /* ── Tracking ───────────────────────────────── @kind font */
+  --ls-kicker:  0.08em; /* @kind font */
+  --ls-caps:    0.02em; /* @kind font */
+  --ls-mono:    0.02em; /* @kind font */
+}

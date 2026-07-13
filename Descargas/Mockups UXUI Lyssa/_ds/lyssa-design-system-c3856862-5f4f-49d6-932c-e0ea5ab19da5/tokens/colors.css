@@ -1,0 +1,103 @@
+/* ════════════════════════════════════════════════════════════════════════
+   Lyssa · Color system
+   ────────────────────────────────────────────────────────────────────────
+   Solo 3 colores base por UI: texto (--fg), fondo (--bg), acento (--accent).
+   El ACENTO ES POR CONTRASTE:
+     · sobre papel claro #F2F4F7  → azul  #00539A
+     · sobre azul oscuro #0A0E65  → dorado #FEBE10
+   El peligro es siempre rojo. --warning == --accent dorado (un solo lenguaje
+   de "atención"); la diferencia con "en vivo" es el pulso, no el color.
+   Conmutar tema con  data-lyssa-theme="dark".
+   ════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Base ─────────────────────────────────────────────── */
+  --bg:        #F2F4F7;   /* papel */
+  --surface:   #FFFFFF;   /* tarjetas, modales */
+  --fg:        #0A0E65;   /* tinta · texto principal */
+  --muted:     #4A5270;   /* texto secundario   (alineado a ReportApp themes.ts) */
+  --faint:     #8A8DA8;   /* placeholders, metadatos (alineado a ReportApp) */
+  --line:      #DCD9D0;   /* bordes y separadores */
+  --surface-alt: #E9ECF2; /* hero / zona suave, sin gradiente */
+
+  /* ── Acento (azul claro · contraste del papel) ─────────── */
+  --accent:      #00539A;
+  --accent-ink:  #FFFFFF;  /* texto sobre el acento */
+  --accent-text: #00539A;  /* acento pequeño legible sobre claro */
+
+  /* ── Estados operativos ────────────────────────────────── */
+  --success: #1F8A4C;   /* acceso autorizado · ronda al día */
+  --warning: #FEBE10;   /* aviso  ( = acento dorado ) */
+  --danger:  #C23B2E;   /* acceso denegado · incidente · pánico */
+  --info:    #00539A;   /* sin conexión · evento neutro */
+
+  /* ── App shell (ControlApp / Admin · escritorio) ───────── */
+  --app-bg:       #F2F4F7;
+  --app-card:     #FFFFFF;
+  --app-fg:       #0A0E65;
+  --app-muted:    #6E6B63;
+  --app-faint:    #8A8378;
+  --app-cell:     #5A574F;
+  --app-line:     #E4E1D9;
+  --app-line2:    #ECEAE4;
+  --app-head:     #F4F2EC;
+  --app-side:     #0A0E65;  /* header + sidebar */
+  --app-sideact:  #1A2185;  /* ítem de nav activo */
+  --app-sideline: #1E248C;  /* título de sección de nav */
+
+  /* ── Documento (two-pager, propuestas, PDF) ────────────── */
+  --doc-page:  #FFFFFF;
+  --doc-fg:    #0A0E65;
+  --doc-muted: #34465F;
+  --doc-faint: #6E6B63;
+  --doc-line:  #DCD9D0;
+  --doc-line2: #ECEAE4;
+  --doc-zebra: #F2F4F7;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   Tema oscuro · fondo azul tinta · acento dorado · contraste ≈10:1
+   Superficies profundas: la página es tinta #0A0E65 y las tarjetas / shell
+   caen a #0B0D3E (más hondas que la página). El texto es #BDBFC1 (tinta clara
+   suave, no blanco puro) para no vibrar sobre el azul. Sala de control en
+   penumbra, turno de noche, ReportApp en terreno.
+   ════════════════════════════════════════════════════════════════════════ */
+[data-lyssa-theme="dark"] {
+  --bg:        #0A0E65;
+  --surface:   #0B0D3E;
+  --fg:        #BDBFC1;
+  --muted:     #AEB4E8;
+  --faint:     #7E84C8;
+  --line:      #2A2F94;
+  --surface-alt: #0B0D3E;
+
+  --accent:      #FEBE10;   /* dorado · contraste del azul oscuro */
+  --accent-ink:  #1A1505;
+  --accent-text: #FEBE10;
+
+  --success: #47BF7D;
+  --warning: #FEBE10;
+  --danger:  #E5675B;
+  --info:    #4D97E6;
+
+  --app-bg:       #0A0E65;
+  --app-card:     #0B0D3E;
+  --app-fg:       #BDBFC1;
+  --app-muted:    #AEB4E8;
+  --app-faint:    #7E84C8;
+  --app-cell:     #AEB4E8;
+  --app-line:     #2A2F94;
+  --app-line2:    #1A1F55;
+  --app-head:     #0B0D3E;
+  --app-side:     #0B0D3E;
+  --app-sideact:  #1E248C;
+  --app-sideline: #2E33A0;
+
+  --doc-page:  #080B38;
+  --doc-fg:    #F2F4F7;
+  --doc-muted: #AEB4E8;
+  --doc-faint: #7E84C8;
+  --doc-line:  #262C66;
+  --doc-line2: #1A1F55;
+  --doc-zebra: #0E1247;
+}
