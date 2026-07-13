@@ -7,7 +7,7 @@
   <meta name="description" content="Daily Confort: branding y packaging para el bienestar de mujeres que realizan diálisis peritoneal. Mockup 3D construido desde el pliego real.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Poppins:wght@400;500;600&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/styles.css">
   <link rel="stylesheet" href="../css/proyecto.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90' font-family='serif' fill='%237C3A62'>D.</text></svg>">
@@ -159,6 +159,69 @@
       .scene { transform: scale(0.78); }
       .floor-shadow { transform: translate(-50%, 130px) scale(0.78); }
     }
+
+    /* ── Sistema visual: tipografías y color ── */
+    .dc-sub {
+      font-family: var(--sans);
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 0 0 18px;
+    }
+    .dc-sub + .dc-sub, .type-grid + .dc-sub { margin-top: 40px; }
+
+    .type-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .type-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 26px 26px 24px;
+    }
+    .type-card__role {
+      margin: 0 0 16px;
+      font-size: 11.5px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+    .type-specimen { margin: 0; line-height: 1; color: var(--ink); }
+    .type-specimen--display { font-family: 'Kudryashev Display', 'Cormorant Garamond', serif; font-size: 52px; font-weight: 500; }
+    .type-specimen--body { font-family: 'Poppins', var(--sans); font-size: 40px; font-weight: 400; letter-spacing: -0.01em; }
+    .type-glyphs { margin: 14px 0 0; font-size: 16px; color: var(--ink-muted); }
+    .type-card__meta {
+      margin: 16px 0 0;
+      font-family: 'Poppins', var(--sans);
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--ink-soft);
+    }
+
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .color-card {
+      margin: 0;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .color-sw { height: 128px; }
+    .color-info { padding: 14px 16px 16px; }
+    .color-name { margin: 0; font-size: 14px; font-weight: 500; color: var(--ink); }
+    .color-hex { margin: 4px 0 0; font-size: 12.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-muted); }
+
+    @media (max-width: 640px) {
+      .type-grid { grid-template-columns: 1fr; }
+      .color-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -205,6 +268,11 @@
   </section>
 
   <section class="psection">
+    <h2 class="psection__title">Sobre el proyecto</h2>
+    <p class="psection__note">La identidad visual de Daily Confort fue diseñada para alejar el producto de la estética fría y clínica asociada a los dispositivos médicos, presentándolo como una prenda íntima de uso cotidiano y pensada para la persona. La paleta combina rosado suave, morado y azul claro: el rosado comunica femenidad, el morado aporta el contraste y el azul refuerza conceptos de higiene y bienestar. Para el logotipo se escogió una tipografía serif con trazos finos, que aporta una apariencia delicada y vinculada al mundo de la moda y la ropa interior. En conjunto, la tipografía y los colores construyen una identidad coherente con los atributos centrales del proyecto: comodidad, discreción, higiene y adaptación al cuerpo.</p>
+  </section>
+
+  <section class="psection">
     <h2 class="psection__title">La propuesta</h2>
     <p class="psection__note">Renders del packaging y pliego de la caja. Haz clic en cualquier imagen para ampliarla.</p>
     <div class="pgrid">
@@ -222,18 +290,50 @@
       </figure>
       <figure class="pcard">
         <img src="../img/daily/pliego.png" alt="Pliego con el arte de la caja Daily Confort" loading="lazy">
-        <figcaption>Pliego · arte de impresión</figcaption>
-      </figure>
-      <figure class="pcard">
-        <img src="../img/daily/troquel.jpg" alt="Troquel de la caja: corte, plegado y sangrado" loading="lazy">
-        <figcaption>Troquel · azul corte / rojo plegado / verde sangrado</figcaption>
+        <figcaption>Pliego · plano</figcaption>
       </figure>
     </div>
   </section>
 
   <section class="psection">
-    <h2 class="psection__title">Sobre el mockup</h2>
-    <p class="psection__note">El modelo 3D se construyó a partir de los archivos originales del packaging: las proporciones salen del troquel (líneas de corte, plegado y sangrado) y el arte de cada cara del pliego de impresión — frontal con la marca, la ventana troquelada al producto y la ficha «Calzón»; reverso con el modo de uso; laterales con atributos y avisos; y tapa con el monograma. Funciona sin conexión y sin servicios externos. Por encontrarse el proyecto en proceso de protección intelectual, el detalle técnico del producto se mantiene reservado.</p>
+    <h2 class="psection__title">Sistema visual</h2>
+    <p class="psection__note">Tipografías y paleta de color que dan cuerpo a la identidad de Daily Confort.</p>
+
+    <h3 class="dc-sub">Tipografías</h3>
+    <div class="type-grid">
+      <div class="type-card">
+        <p class="type-card__role">Títulos · logotipo</p>
+        <p class="type-specimen type-specimen--display">Kudryashev Display</p>
+        <p class="type-glyphs" style="font-family:'Kudryashev Display','Cormorant Garamond',serif;">Aa Bb Cc Dd · 0 1 2 3 4 5 6 7 8 9</p>
+        <p class="type-card__meta">Serif de alto contraste y trazos finos para el logo.</p>
+      </div>
+      <div class="type-card">
+        <p class="type-card__role">Texto · apoyo</p>
+        <p class="type-specimen type-specimen--body">Poppins Regular</p>
+        <p class="type-glyphs" style="font-family:'Poppins',sans-serif;">Aa Bb Cc Dd · 0 1 2 3 4 5 6 7 8 9</p>
+        <p class="type-card__meta">Sans geométrica y neutra: mantiene la lectura clara y ordenada.</p>
+      </div>
+    </div>
+
+    <h3 class="dc-sub">Paleta de color</h3>
+    <div class="color-grid">
+      <figure class="color-card">
+        <div class="color-sw" style="background:#923874;"></div>
+        <figcaption class="color-info"><p class="color-name">Morado</p><p class="color-hex">#923874</p></figcaption>
+      </figure>
+      <figure class="color-card">
+        <div class="color-sw" style="background:#95bbe3;"></div>
+        <figcaption class="color-info"><p class="color-name">Azul claro</p><p class="color-hex">#95BBE3</p></figcaption>
+      </figure>
+      <figure class="color-card">
+        <div class="color-sw" style="background:#f3d2e2;"></div>
+        <figcaption class="color-info"><p class="color-name">Rosado suave</p><p class="color-hex">#F3D2E2</p></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="psection">
+    <h2 class="psection__title">Ficha</h2>
     <dl class="ficha">
       <div><dt>Rol</dt><dd>Identidad visual · packaging estructural y gráfico</dd></div>
       <div><dt>Área</dt><dd>Branding · Packaging · Salud</dd></div>
