@@ -7,7 +7,7 @@ cd "$(dirname "$0")"
 rm -rf dist
 mkdir -p dist
 cp index.html 404.html dist/
-cp -r css js img docs proyectos dist/
+cp -r css js img docs proyectos apps dist/
 
 echo "dist/ listo:"
 du -sh dist

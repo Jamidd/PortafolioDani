@@ -14,23 +14,35 @@ js/lightbox.js                 Lightbox compartido (clic para ampliar imágenes)
 proyectos/mediterranea.html    01 · Libro digital: portada, págs. 1-10 y 166-176
 proyectos/daily-confort.html   02 · Caja 3D texturizada con el pliego real
 proyectos/monarch.html         03 · Demo frontal/reverso/perfil con adhesivos móviles
-proyectos/lyssa.html           04 · Apps reales embebidas (ControlApp + Admin)
+proyectos/lyssa.html           04 · Apps reales embebidas (ReportApp + Admin)
 img/                           Imágenes (libro/, monarch/, daily/, lyssa/)
 docs/                          CV descargable
 ```
 
-## Apps reales de Lyssa
+## Apps reales de Lyssa (modo demo autocontenido)
 
-`proyectos/lyssa.html` embebe los builds reales que están en `Descargas/`:
+`proyectos/lyssa.html` embebe los builds reales de ReportApp y Admin desde
+`apps/reportapp/` y `apps/admin/`, compilados en **modo demo** (`VITE_DEMO=1`):
+
+- API simulada dentro del navegador con datos ficticios (sin backend, nada
+  sale a la red).
+- Sesión precargada: el visitante cae directo al interior de la app; si
+  cierra sesión, el login acepta cualquier credencial.
+- La PWA/service worker queda desactivada en el build demo (interferiría al
+  servirse bajo subruta).
+
+El modo demo vive en los repos de las apps (`Descargas/*/src/demo/`) detrás
+del flag `VITE_DEMO`; sin el flag, el build de producción es idéntico al de
+siempre (el código demo se elimina por tree-shaking).
+
+Para regenerar los builds demo (requiere `Descargas/` con sus node_modules):
 
 ```
-(cd "Descargas/ControlApp/dist" && python -m http.server 8014 &)
-(cd "Descargas/Admin/dist"      && python -m http.server 8015 &)
+bash build-apps-demo.sh
 ```
 
-Si esos puertos no están activos, los marcos del teléfono y del escritorio se
-verán vacíos. Al desplegar el portafolio, cambiar los `src` de los iframes en
-`proyectos/lyssa.html` por las URL donde estén publicadas las aplicaciones.
+`apps/` se commitea (son artefactos livianos) para que Netlify los publique
+sin necesitar `Descargas/`.
 
 ## Origen de los assets
 

@@ -6,6 +6,17 @@
   command = "bash netlify-build.sh"
   publish = "dist"
 
+# Las apps demo de Lyssa son SPAs: cualquier ruta interna vuelve a su index.
+[[redirects]]
+  from = "/apps/reportapp/*"
+  to = "/apps/reportapp/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/apps/admin/*"
+  to = "/apps/admin/index.html"
+  status = 200
+
 # Los HTML siempre se revalidan; las imágenes se cachean un día.
 [[headers]]
   for = "/*.html"

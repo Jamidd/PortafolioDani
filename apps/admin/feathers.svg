@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="54 0 512 512" fill="none">
+  <!-- Lyssa sail / three feathers mark -->
+  <!-- blue blade (upper, tallest) -->
+  <path d="M150 430 C 195 295 235 155 318 42 C 312 185 282 320 218 430 Z" fill="#0960AF"/>
+  <!-- amber blade (right) -->
+  <path d="M245 430 C 305 335 358 240 432 152 C 416 270 366 365 300 430 Z" fill="#F0BC27"/>
+  <!-- navy hull (bottom) -->
+  <path d="M150 460 C 270 430 380 430 470 405 C 380 470 260 480 175 478 Z" fill="#151968"/>
+</svg>
