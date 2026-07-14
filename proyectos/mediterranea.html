@@ -25,7 +25,7 @@
       max-width: 940px;
       margin: 0 auto;
       aspect-ratio: 1.8266;         /* dos páginas de 1116×1222 */
-      perspective: 2600px;
+      perspective: 1700px;
     }
 
     .book__page {
@@ -42,7 +42,7 @@
     .book__page--right { right: 0; border-radius: 0 4px 4px 0; }
 
     .book__page img,
-    .leaf__face img {
+    .book__face img {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -61,64 +61,87 @@
     .book__page--left::after  { right: 0; background: linear-gradient(to left,  rgba(33,29,36,0.14), transparent); }
     .book__page--right::after { left: 0;  background: linear-gradient(to right, rgba(33,29,36,0.14), transparent); }
 
-    /* hoja que gira */
-    .leaf {
+    /* ── hoja que gira (un solo pliego, flip 3D) ── */
+    .book__leaf {
       position: absolute;
-      top: 0; bottom: 0; right: 0;
+      top: 0; bottom: 0;
+      right: 0;
       width: 50%;
       transform-origin: left center;
       transform-style: preserve-3d;
       z-index: 5;
       display: none;
+      will-change: transform;
     }
+    .book__leaf.is-active { display: block; box-shadow: -14px 10px 34px rgba(33, 29, 36, 0.22); }
+    .book__leaf.is-turning { transition: transform 0.85s cubic-bezier(0.45, 0.05, 0.2, 1); }
 
-    .leaf.is-animating { display: block; }
-
-    .leaf__face {
+    .book__face {
       position: absolute;
       inset: 0;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
-      background: #fff;
       overflow: hidden;
+      background: #fff;
     }
+    .book__face--front { border-radius: 0 4px 4px 0; }
+    .book__face--back  { transform: rotateY(180deg); border-radius: 4px 0 0 4px; }
 
-    .leaf__face--back { transform: rotateY(180deg); }
-
-    /* sombreado dinámico durante el giro: la cara que se va se oscurece,
-       la que llega parte sombreada y se aclara */
-    .leaf__face::after {
+    /* sombreado dinámico durante el giro */
+    .book__face::after {
       content: "";
       position: absolute;
       inset: 0;
       pointer-events: none;
       opacity: 0;
-      transition: opacity 1.05s cubic-bezier(0.35, 0.1, 0.25, 1);
+      transition: opacity 0.9s cubic-bezier(0.45, 0.05, 0.2, 1);
     }
+    .book__face--front::after { background: linear-gradient(to right, rgba(33,29,36,0.34), rgba(33,29,36,0.05) 55%, transparent); }
+    .book__face--back::after  { background: linear-gradient(to left,  rgba(33,29,36,0.32), rgba(33,29,36,0.05) 55%, transparent); opacity: 1; }
 
-    .leaf__face--front::after {
-      background: linear-gradient(to right, rgba(33,29,36,0.32), rgba(33,29,36,0.06) 55%, transparent);
+    /* avanzar: la cara que se va se oscurece; el reverso que llega se aclara */
+    .book__leaf.is-turning:not(.is-back) .book__face--front::after { opacity: 1; }
+    .book__leaf.is-turning:not(.is-back) .book__face--back::after  { opacity: 0; }
+    /* retroceder: estados invertidos */
+    .book__leaf.is-back .book__face--front::after { opacity: 1; }
+    .book__leaf.is-back .book__face--back::after  { opacity: 0; }
+    .book__leaf.is-back.is-turning .book__face--front::after { opacity: 0; }
+    .book__leaf.is-back.is-turning .book__face--back::after  { opacity: 1; }
+
+    /* fundido suave (móvil y prefers-reduced-motion) */
+    .book__fade { animation: bookFade 0.34s ease; }
+    @keyframes bookFade { from { opacity: 0.25; } to { opacity: 1; } }
+
+    /* spinner: sólo si la espera se alarga */
+    .book__spinner {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 34px; height: 34px;
+      margin: -17px 0 0 -17px;
+      border: 3px solid rgba(33, 29, 36, 0.16);
+      border-top-color: var(--accent, #7C3A62);
+      border-radius: 50%;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 20;
+      transition: opacity 0.2s ease;
     }
+    .book.is-waiting .book__spinner { opacity: 1; animation: bookSpin 0.8s linear infinite; }
+    @keyframes bookSpin { to { transform: rotate(360deg); } }
 
-    .leaf__face--back::after {
-      background: linear-gradient(to left, rgba(33,29,36,0.30), rgba(33,29,36,0.05) 55%, transparent);
-      opacity: 1;
-      transition: opacity 1.05s cubic-bezier(0.35, 0.1, 0.25, 1);
-    }
-
-    .leaf.turn .leaf__face--front::after { opacity: 1; }
-    .leaf.turn .leaf__face--back::after { opacity: 0; }
-
-    .leaf.is-animating {
-      box-shadow: -18px 8px 34px rgba(33, 29, 36, 0.22);
-    }
-
-    .leaf.turn {
-      transition: transform 1.05s cubic-bezier(0.35, 0.1, 0.25, 1);
-    }
+    .book-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
     @media (prefers-reduced-motion: reduce) {
-      .leaf.turn { transition-duration: 0.01s; }
+      .book__leaf.is-turning, .book__face::after { transition-duration: 0.001s; }
+    }
+
+    /* ── móvil: una sola página a la vez ── */
+    @media (max-width: 700px) {
+      .book { aspect-ratio: 0.9133; }
+      .book__page--left { display: none; }
+      .book__page--right { width: 100%; border-radius: 4px; }
+      .book__page--right::after { display: none; }
+      .book__leaf { display: none !important; }
     }
 
     /* página especial (vacía / separador) */
@@ -320,14 +343,15 @@
     <div class="book" id="book">
       <div class="book__page book__page--left" id="pageLeft"></div>
       <div class="book__page book__page--right" id="pageRight"></div>
-      <div class="leaf" id="leaf">
-        <div class="leaf__face leaf__face--front" id="leafFront"></div>
-        <div class="leaf__face leaf__face--back" id="leafBack"></div>
+      <div class="book__leaf" id="leaf">
+        <div class="book__face book__face--front" id="leafFront"></div>
+        <div class="book__face book__face--back" id="leafBack"></div>
       </div>
+      <div class="book__spinner" id="bookSpinner" aria-hidden="true"></div>
     </div>
     <div class="book-controls">
-      <button class="book-btn" id="btnPrev" aria-label="Página anterior">← Anterior</button>
-      <div class="book-indicator" id="indicator"></div>
+      <button class="book-btn" id="btnPrev" aria-label="Pliego anterior">← Anterior</button>
+      <div class="book-indicator" id="indicator" aria-live="polite"></div>
       <button class="book-btn" id="btnNext" aria-label="Página siguiente">Siguiente →</button>
     </div>
     <p class="book-hint">Haz clic en las páginas para pasarlas · doble clic para ampliar · también funcionan las flechas del teclado</p>
@@ -466,9 +490,27 @@
       'Páginas 173 – 174', 'Páginas 175 – 176', 'Contraportada'
     ];
 
-    var current = 0;
-    var animating = false;
+    // ── Lista plana de páginas reales (para la vista móvil de una sola página) ──
+    var pages = [];
+    var pageToSpreadIdx = [];
+    var spreadFirstPage = [];
+    (function () {
+      var pi = 0;
+      spreads.forEach(function (sp, si) {
+        var first = -1;
+        sp.forEach(function (p) {
+          if (p && p.type !== 'blank') {
+            if (first < 0) first = pi;
+            pages.push(p);
+            pageToSpreadIdx[pi] = si;
+            pi++;
+          }
+        });
+        spreadFirstPage[si] = first < 0 ? (spreadFirstPage[si - 1] || 0) : first;
+      });
+    })();
 
+    var book = document.getElementById('book');
     var pageLeft = document.getElementById('pageLeft');
     var pageRight = document.getElementById('pageRight');
     var leaf = document.getElementById('leaf');
@@ -478,7 +520,40 @@
     var btnPrev = document.getElementById('btnPrev');
     var btnNext = document.getElementById('btnNext');
 
-    function renderInto(el, page) {
+    var REDUCE = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var mqMobile = window.matchMedia('(max-width: 700px)');
+    function isMobile() { return mqMobile.matches; }
+
+    var spreadIndex = 0;                       // pliego (escritorio)
+    var pageIndex = spreadFirstPage[0] || 0;   // página suelta (móvil)
+    var isAnimating = false;
+
+    // ── Precarga + caché con decode (evita páginas en blanco al girar) ──
+    var cache = new Map();
+    function preloadImage(src) {
+      if (!src) return Promise.resolve(null);
+      if (cache.has(src)) return cache.get(src);
+      var pr = (async function () {
+        var img = new Image();
+        img.src = src;
+        try { if (img.decode) { await img.decode(); } } catch (e) {}
+        return img;
+      })();
+      cache.set(src, pr);
+      return pr;
+    }
+    function srcsOfSpread(i) {
+      if (i < 0 || i >= spreads.length) return [];
+      return spreads[i].filter(function (p) { return p && p.type === 'img'; })
+                       .map(function (p) { return p.src; });
+    }
+    function preloadSpread(i) { return Promise.all(srcsOfSpread(i).map(preloadImage)); }
+    function preloadAround(i) { preloadSpread(i - 1); preloadSpread(i); preloadSpread(i + 1); }
+    function preloadPage(i) { if (pages[i] && pages[i].type === 'img') preloadImage(pages[i].src); }
+
+    // ── Render ──
+    function renderInto(el, page, fade) {
+      var cls = fade ? ' class="book__fade"' : '';
       if (!page || page.type === 'blank') {
         el.innerHTML = '<div class="page-blank"></div>';
       } else if (page.type === 'gap') {
@@ -489,100 +564,160 @@
             '<div class="page-gap__dots">· · ·</div>' +
           '</div>';
       } else {
-        el.innerHTML = '<img src="' + page.src + '" alt="' + page.label + '">';
+        el.innerHTML = '<img' + cls + ' src="' + page.src + '" alt="' + page.label + '">';
+      }
+    }
+    function renderSpread() {
+      renderInto(pageLeft, spreads[spreadIndex][0]);
+      renderInto(pageRight, spreads[spreadIndex][1]);
+    }
+    function renderSingle(fade) { renderInto(pageRight, pages[pageIndex], fade); }
+
+    function updateChrome() {
+      if (isMobile()) {
+        indicator.textContent = (pages[pageIndex] && pages[pageIndex].label) || '';
+        btnPrev.disabled = pageIndex <= 0 || isAnimating;
+        btnNext.disabled = pageIndex >= pages.length - 1 || isAnimating;
+      } else {
+        indicator.textContent = labels[spreadIndex];
+        btnPrev.disabled = spreadIndex <= 0 || isAnimating;
+        btnNext.disabled = spreadIndex >= spreads.length - 1 || isAnimating;
       }
     }
 
-    function update() {
-      renderInto(pageLeft, spreads[current][0]);
-      renderInto(pageRight, spreads[current][1]);
-      indicator.textContent = labels[current];
-      btnPrev.disabled = current === 0;
-      btnNext.disabled = current === spreads.length - 1;
+    // spinner sólo si la espera supera un umbral razonable
+    var waitTimer = null;
+    function setBusy(b) {
+      if (b) {
+        waitTimer = setTimeout(function () { book.classList.add('is-waiting'); }, 450);
+      } else {
+        clearTimeout(waitTimer);
+        book.classList.remove('is-waiting');
+      }
+      updateChrome();
     }
 
-    function next() {
-      if (animating || current >= spreads.length - 1) return;
-      animating = true;
-      renderInto(leafFront, spreads[current][1]);
-      renderInto(leafBack, spreads[current + 1][0]);
-      renderInto(pageRight, spreads[current + 1][1]);
-      leaf.classList.add('is-animating');
-      leaf.style.transform = 'rotateY(0deg)';
-      requestAnimationFrame(function () {
-        requestAnimationFrame(function () {
-          leaf.classList.add('turn');
-          leaf.style.transform = 'rotateY(-180deg)';
-        });
-      });
-      leaf.addEventListener('transitionend', function done() {
-        leaf.removeEventListener('transitionend', done);
-        current++;
-        finishFlip();
+    // ── Escritorio: giro 3D de un pliego (una sola hoja) ──
+    function turnDesktop(dir) {
+      var target = spreadIndex + dir;
+      if (target < 0 || target >= spreads.length) return;
+      isAnimating = true;
+      setBusy(true);
+      Promise.all([preloadSpread(spreadIndex), preloadSpread(target)]).then(function () {
+        setBusy(false);
+        if (REDUCE) {
+          spreadIndex = target;
+          renderInto(pageLeft, spreads[spreadIndex][0], true);
+          renderInto(pageRight, spreads[spreadIndex][1], true);
+          endTurn();
+          preloadAround(spreadIndex);
+          return;
+        }
+        var from, to;
+        if (dir === 1) {
+          renderInto(leafFront, spreads[spreadIndex][1]);   // derecha actual (se levanta)
+          renderInto(leafBack, spreads[target][0]);         // próxima izquierda (reverso)
+          renderInto(pageRight, spreads[target][1]);        // próxima derecha, ya lista debajo
+          leaf.className = 'book__leaf is-active';
+          from = 'rotateY(0deg)'; to = 'rotateY(-180deg)';
+        } else {
+          renderInto(leafFront, spreads[target][1]);        // derecha anterior (llega al final)
+          renderInto(leafBack, spreads[spreadIndex][0]);    // izquierda actual (se levanta)
+          renderInto(pageLeft, spreads[target][0]);         // izquierda anterior, ya lista debajo
+          leaf.className = 'book__leaf is-active is-back';
+          from = 'rotateY(-180deg)'; to = 'rotateY(0deg)';
+        }
+        leaf.style.transform = from;
+        void leaf.offsetWidth;
+        // Web Animations API: el giro se reproduce siempre, sin depender de
+        // tiempos de transición CSS (evita que se "pegue" o salte).
+        requestAnimationFrame(function () { leaf.classList.add('is-turning'); });   // dispara el sombreado
+        var anim = leaf.animate(
+          [{ transform: from }, { transform: to }],
+          { duration: 900, easing: 'cubic-bezier(0.45, 0.05, 0.2, 1)', fill: 'none' }
+        );
+        anim.onfinish = function () {
+          spreadIndex = target;
+          renderSpread();                  // pliego definitivo (imágenes ya decodificadas → sin salto)
+          leaf.className = 'book__leaf';   // oculta la hoja
+          leaf.style.transform = '';
+          endTurn();
+          preloadAround(spreadIndex);
+        };
       });
     }
 
-    function prev() {
-      if (animating || current <= 0) return;
-      animating = true;
-      renderInto(leafFront, spreads[current - 1][1]);
-      renderInto(leafBack, spreads[current][0]);
-      renderInto(pageLeft, spreads[current - 1][0]);
-      leaf.classList.add('is-animating');
-      leaf.style.transform = 'rotateY(-180deg)';
-      requestAnimationFrame(function () {
-        requestAnimationFrame(function () {
-          leaf.classList.add('turn');
-          leaf.style.transform = 'rotateY(0deg)';
-        });
-      });
-      leaf.addEventListener('transitionend', function done() {
-        leaf.removeEventListener('transitionend', done);
-        current--;
-        finishFlip();
+    // ── Móvil: una sola página, con fundido suave ──
+    function turnMobile(dir) {
+      var target = pageIndex + dir;
+      if (target < 0 || target >= pages.length) return;
+      isAnimating = true;
+      setBusy(true);
+      preloadImage(pages[target] && pages[target].src).then(function () {
+        setBusy(false);
+        pageIndex = target;
+        renderSingle(true);
+        endTurn();
+        preloadPage(target + 1);
+        preloadPage(target - 1);
       });
     }
 
-    function finishFlip() {
-      update();
-      leaf.classList.remove('turn', 'is-animating');
-      leaf.style.transform = '';
-      animating = false;
-    }
+    function endTurn() { isAnimating = false; updateChrome(); }
 
-    btnNext.addEventListener('click', next);
-    btnPrev.addEventListener('click', prev);
-    pageRight.addEventListener('click', next);
-    pageLeft.addEventListener('click', prev);
+    function goNext() { if (isAnimating) return; if (isMobile()) turnMobile(1); else turnDesktop(1); }
+    function goPrev() { if (isAnimating) return; if (isMobile()) turnMobile(-1); else turnDesktop(-1); }
 
+    btnNext.addEventListener('click', goNext);
+    btnPrev.addEventListener('click', goPrev);
+    pageRight.addEventListener('click', goNext);
+    pageLeft.addEventListener('click', goPrev);
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'ArrowRight') next();
-      if (e.key === 'ArrowLeft') prev();
+      if (e.key === 'ArrowRight') goNext();
+      else if (e.key === 'ArrowLeft') goPrev();
     });
 
-    // Lightbox con doble clic
+    // ── Cambio de modo escritorio ↔ móvil ──
+    function syncMode() {
+      if (isAnimating) return;
+      if (isMobile()) {
+        pageIndex = spreadFirstPage[spreadIndex] || 0;
+        renderSingle(false);
+      } else {
+        spreadIndex = pageToSpreadIdx[pageIndex] || 0;
+        renderSpread();
+        leaf.className = 'book__leaf';
+      }
+      updateChrome();
+    }
+    if (mqMobile.addEventListener) mqMobile.addEventListener('change', syncMode);
+    else if (mqMobile.addListener) mqMobile.addListener(syncMode);
+
+    // ── Lightbox (doble clic para ampliar) ──
     var lightbox = document.getElementById('lightbox');
     var lightboxImg = document.getElementById('lightboxImg');
-
     function openLightbox(page) {
       if (!page || page.type !== 'img') return;
       lightboxImg.src = page.src;
       lightbox.classList.add('open');
     }
-
-    pageLeft.addEventListener('dblclick', function () { openLightbox(spreads[current][0]); });
-    pageRight.addEventListener('dblclick', function () { openLightbox(spreads[current][1]); });
+    pageLeft.addEventListener('dblclick', function () {
+      openLightbox(isMobile() ? pages[pageIndex] : spreads[spreadIndex][0]);
+    });
+    pageRight.addEventListener('dblclick', function () {
+      openLightbox(isMobile() ? pages[pageIndex] : spreads[spreadIndex][1]);
+    });
     lightbox.addEventListener('click', function () { lightbox.classList.remove('open'); });
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') lightbox.classList.remove('open');
     });
 
-    // Precarga de imágenes
-    spreads.forEach(function (s) {
-      s.forEach(function (p) { if (p && p.type === 'img') { new Image().src = p.src; } });
-    });
-
-    update();
+    // ── Init ──
+    if (isMobile()) { renderSingle(false); } else { renderSpread(); }
+    updateChrome();
+    preloadAround(0);
+    preloadPage(pageIndex + 1);
+    preloadPage(pageIndex - 1);
   </script>
 </body>
 </html>
