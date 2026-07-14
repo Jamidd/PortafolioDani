@@ -256,7 +256,9 @@
   <!-- 1 · Desafío y contexto -->
   <section class="psection">
     <p class="g-kicker">01 · Desafío y contexto</p>
-    <p class="g-quote">¿Cómo podríamos <b>reducir el estrés y la incertidumbre</b> en las pacientes mediante el acceso claro, comprensible y empático a información sobre <b>procedimientos ginecológicos</b>?</p>
+    <center>
+      <p class="g-quote">¿Cómo podríamos <b>reducir el estrés y la incertidumbre</b> en las pacientes mediante el acceso claro, comprensible y empático a información sobre <b>procedimientos ginecológicos</b>?</p>
+    </center>
     <p class="psection__note" style="margin-top:26px;max-width:760px;">Las visitas ginecológicas pueden ser estresantes por la falta de claridad y la dificultad para entender la información médica técnica. Muchas mujeres experimentan incertidumbre frente a procedimientos invasivos, agravada por una comunicación a veces limitada o poco empática. El proyecto parte de escuchar esa experiencia.</p>
     <div class="g-cites">
       <figure class="g-cite">
@@ -316,8 +318,8 @@
         <div class="g-jphase">
           <p class="g-jphase__k">Pre-servicio</p>
           <div class="g-jstages">
-            <span class="g-jstage">Reserva de la consulta</span>
             <span class="g-jstage">Descarga y registro</span>
+            <span class="g-jstage">Reserva de la consulta</span>
             <span class="g-jstage">Información y preparación</span>
             <span class="g-jstage">Listado de preguntas</span>
           </div>
@@ -341,16 +343,16 @@
         </div>
       </div>
       <div class="g-curve">
-        <svg viewBox="0 0 900 96" preserveAspectRatio="none" role="img" aria-label="Curva emocional: de ansiedad alta a tranquilidad">
+        <svg viewBox="0 0 900 96" preserveAspectRatio="none" role="img" aria-label="Curva emocional: parte neutral, baja al estrés más alto en el servicio y sube a la tranquilidad">
           <defs><linearGradient id="gc" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stop-color="#C23B2E"/><stop offset="0.5" stop-color="#E8873E"/><stop offset="1" stop-color="#3E9B6C"/>
+            <stop offset="0" stop-color="#9C8A93"/><stop offset="0.5" stop-color="#C23B2E"/><stop offset="1" stop-color="#3E9B6C"/>
           </linearGradient></defs>
-          <path d="M0,74 C150,80 210,40 300,44 C420,50 470,30 600,34 C720,38 800,20 900,18" fill="none" stroke="url(#gc)" stroke-width="3.5" stroke-linecap="round"/>
-          <circle cx="40" cy="75" r="4.5" fill="#C23B2E"/>
-          <circle cx="450" cy="41" r="4.5" fill="#E8873E"/>
-          <circle cx="860" cy="19" r="4.5" fill="#3E9B6C"/>
+          <path d="M0,46 C150,48 320,84 450,84 C600,84 730,40 900,14" fill="none" stroke="url(#gc)" stroke-width="3.5" stroke-linecap="round"/>
+          <circle cx="40" cy="46" r="4.5" fill="#9C8A93"/>
+          <circle cx="450" cy="84" r="4.5" fill="#C23B2E"/>
+          <circle cx="860" cy="18" r="4.5" fill="#3E9B6C"/>
         </svg>
-        <div class="g-curve__legend"><span>Ansiedad / estrés alto</span><span>Neutral</span><span>Emocionada / tranquila</span></div>
+        <div class="g-curve__legend"><span>Neutral</span><span>Ansiedad / estrés alto</span><span>Tranquila</span></div>
       </div>
     </div>
   </section>
@@ -470,7 +472,7 @@
         <img class="g-wire-real" src="../img/ginea/home.png" alt="Pantalla de inicio final de Ginea" loading="lazy">
       </div>
     </div>
-    <p class="psection__hint" style="text-align:center;margin-top:22px;">Reconstrucción esquemática de la arquitectura del inicio · la jerarquía prioriza lo urgente y revela el resto de forma progresiva.</p>
+    <p class="psection__hint" style="text-align:center;margin-top:22px;"></p>
   </section>
 
   <!-- 7 · Interfaz y prototipo final -->
@@ -487,6 +489,7 @@
           <img class="g-slide" src="../img/ginea/checklist.png" alt="Checklist" data-title="Checklist" data-desc="Arma su checklist: preguntas para el médico y qué llevar el día de la consulta.">
           <img class="g-slide" src="../img/ginea/search.png" alt="Buscar profesional" data-title="Buscar profesional" data-desc="Encuentra una ginecóloga según reseñas y afinidad, con perfiles cercanos.">
           <img class="g-slide" src="../img/ginea/booking.png" alt="Reserva de hora" data-title="Reserva de hora" data-desc="Elige fecha y confirma; puede enviar su checklist junto con la reserva.">
+          <img class="g-slide" src="../img/ginea/chatbot%20ginea.png" alt="Chatbot" data-title="Chatbot" data-desc="Resuelve dudas antes y después de la consulta con un asistente cercano y sin juicios.">
         </div>
         <div class="g-progress"><i></i></div>
       </div>
@@ -506,13 +509,6 @@
       </div>
     </div>
 
-    <h3 class="g-sub">Pantallas clave</h3>
-    <div class="g-shots">
-      <figure class="g-shot"><img src="../img/ginea/home.png" alt="Inicio de Ginea: próxima cita y contenido recomendado" loading="lazy" data-zoom="../img/ginea/home.png"><figcaption>Inicio</figcaption></figure>
-      <figure class="g-shot"><img src="../img/ginea/checklist.png" alt="Checklist de preparación para la consulta" loading="lazy" data-zoom="../img/ginea/checklist.png"><figcaption>Checklist</figcaption></figure>
-      <figure class="g-shot"><img src="../img/ginea/search.png" alt="Búsqueda de ginecólogos con reseñas" loading="lazy" data-zoom="../img/ginea/search.png"><figcaption>Buscar profesional</figcaption></figure>
-      <figure class="g-shot"><img src="../img/ginea/booking.png" alt="Reserva de hora con calendario y detalles" loading="lazy" data-zoom="../img/ginea/booking.png"><figcaption>Reserva de hora</figcaption></figure>
-    </div>
   </section>
 
   <!-- 8 · Testeo, resultados y aprendizajes -->
