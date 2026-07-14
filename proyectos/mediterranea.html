@@ -12,137 +12,55 @@
   <link rel="stylesheet" href="../css/proyecto.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90' font-family='serif' fill='%237C3A62'>D.</text></svg>">
   <style>
-    /* ── Libro digital ── */
+    /* ── Libro digital (turn.js · efecto revista) ── */
     .book-stage {
       background: var(--bg-alt);
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
-      padding: 56px 16px 40px;
+      padding: 56px 16px 44px;
     }
 
-    .book {
-      position: relative;
+    .book-wrap {
       max-width: 940px;
       margin: 0 auto;
-      aspect-ratio: 1.8266;         /* dos páginas de 1116×1222 */
-      perspective: 1700px;
     }
 
-    .book__page {
+    /* contenedor de turn.js: recibe ancho/alto en línea al inicializar */
+    .book {
+      position: relative;
+      margin: 0 auto;
+      visibility: hidden;                 /* se muestra al inicializar turn.js */
+      box-shadow: 0 22px 54px rgba(33, 29, 36, 0.24);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .book.is-ready { visibility: visible; }
+
+    /* antes de inicializar, las páginas se superponen para no provocar un
+       salto de layout; turn.js sobreescribe estas posiciones. */
+    .book .page {
       position: absolute;
-      top: 0;
-      bottom: 0;
+      top: 0; left: 0;
       width: 50%;
+      height: 100%;
       background: #fff;
       overflow: hidden;
-      box-shadow: 0 14px 40px rgba(33, 29, 36, 0.18);
     }
-
-    .book__page--left  { left: 0;  border-radius: 4px 0 0 4px; }
-    .book__page--right { right: 0; border-radius: 0 4px 4px 0; }
-
-    .book__page img,
-    .book__face img {
+    .book .page img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
+      -webkit-user-drag: none;
+      user-select: none;
     }
 
-    /* sombra del lomo */
-    .book__page--left::after,
-    .book__page--right::after {
-      content: "";
-      position: absolute;
-      top: 0; bottom: 0;
-      width: 7%;
-      pointer-events: none;
-    }
-    .book__page--left::after  { right: 0; background: linear-gradient(to left,  rgba(33,29,36,0.14), transparent); }
-    .book__page--right::after { left: 0;  background: linear-gradient(to right, rgba(33,29,36,0.14), transparent); }
+    .book .page--gap { background: var(--bg); }
 
-    /* ── hoja que gira (un solo pliego, flip 3D) ── */
-    .book__leaf {
-      position: absolute;
-      top: 0; bottom: 0;
-      right: 0;
-      width: 50%;
-      transform-origin: left center;
-      transform-style: preserve-3d;
-      z-index: 5;
-      display: none;
-      will-change: transform;
-    }
-    .book__leaf.is-active { display: block; box-shadow: -14px 10px 34px rgba(33, 29, 36, 0.22); }
-    .book__leaf.is-turning { transition: transform 0.85s cubic-bezier(0.45, 0.05, 0.2, 1); }
-
-    .book__face {
-      position: absolute;
-      inset: 0;
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      overflow: hidden;
-      background: #fff;
-    }
-    .book__face--front { border-radius: 0 4px 4px 0; }
-    .book__face--back  { transform: rotateY(180deg); border-radius: 4px 0 0 4px; }
-
-    /* sombreado dinámico durante el giro */
-    .book__face::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.9s cubic-bezier(0.45, 0.05, 0.2, 1);
-    }
-    .book__face--front::after { background: linear-gradient(to right, rgba(33,29,36,0.34), rgba(33,29,36,0.05) 55%, transparent); }
-    .book__face--back::after  { background: linear-gradient(to left,  rgba(33,29,36,0.32), rgba(33,29,36,0.05) 55%, transparent); opacity: 1; }
-
-    /* avanzar: la cara que se va se oscurece; el reverso que llega se aclara */
-    .book__leaf.is-turning:not(.is-back) .book__face--front::after { opacity: 1; }
-    .book__leaf.is-turning:not(.is-back) .book__face--back::after  { opacity: 0; }
-    /* retroceder: estados invertidos */
-    .book__leaf.is-back .book__face--front::after { opacity: 1; }
-    .book__leaf.is-back .book__face--back::after  { opacity: 0; }
-    .book__leaf.is-back.is-turning .book__face--front::after { opacity: 0; }
-    .book__leaf.is-back.is-turning .book__face--back::after  { opacity: 1; }
-
-    /* fundido suave (móvil y prefers-reduced-motion) */
-    .book__fade { animation: bookFade 0.34s ease; }
-    @keyframes bookFade { from { opacity: 0.25; } to { opacity: 1; } }
-
-    /* spinner: sólo si la espera se alarga */
-    .book__spinner {
-      position: absolute;
-      top: 50%; left: 50%;
-      width: 34px; height: 34px;
-      margin: -17px 0 0 -17px;
-      border: 3px solid rgba(33, 29, 36, 0.16);
-      border-top-color: var(--accent, #7C3A62);
-      border-radius: 50%;
-      opacity: 0;
-      pointer-events: none;
-      z-index: 20;
-      transition: opacity 0.2s ease;
-    }
-    .book.is-waiting .book__spinner { opacity: 1; animation: bookSpin 0.8s linear infinite; }
-    @keyframes bookSpin { to { transform: rotate(360deg); } }
+    /* turn.js dibuja sus propios degradados de pliegue con gradients:true */
+    .book .even .gradient,
+    .book .odd  .gradient { border-radius: 0; }
 
     .book-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-
-    @media (prefers-reduced-motion: reduce) {
-      .book__leaf.is-turning, .book__face::after { transition-duration: 0.001s; }
-    }
-
-    /* ── móvil: una sola página a la vez ── */
-    @media (max-width: 700px) {
-      .book { aspect-ratio: 0.9133; }
-      .book__page--left { display: none; }
-      .book__page--right { width: 100%; border-radius: 4px; }
-      .book__page--right::after { display: none; }
-      .book__leaf { display: none !important; }
-    }
 
     /* página especial (vacía / separador) */
     .page-blank {
@@ -340,21 +258,18 @@
   </header>
 
   <section class="psection psection--full book-stage" aria-label="Libro digital">
-    <div class="book" id="book">
-      <div class="book__page book__page--left" id="pageLeft"></div>
-      <div class="book__page book__page--right" id="pageRight"></div>
-      <div class="book__leaf" id="leaf">
-        <div class="book__face book__face--front" id="leafFront"></div>
-        <div class="book__face book__face--back" id="leafBack"></div>
-      </div>
-      <div class="book__spinner" id="bookSpinner" aria-hidden="true"></div>
+    <div class="book-wrap">
+      <div class="book" id="book"></div>
     </div>
     <div class="book-controls">
-      <button class="book-btn" id="btnPrev" aria-label="Pliego anterior">← Anterior</button>
+      <button class="book-btn" id="btnPrev" aria-label="Página anterior">← Anterior</button>
       <div class="book-indicator" id="indicator" aria-live="polite"></div>
       <button class="book-btn" id="btnNext" aria-label="Página siguiente">Siguiente →</button>
     </div>
-    <p class="book-hint">Haz clic en las páginas para pasarlas · doble clic para ampliar · también funcionan las flechas del teclado</p>
+    <div class="book-controls" style="margin-top:14px;">
+      <button class="book-btn" id="btnZoom" aria-label="Ampliar la página actual">⤢ Ampliar</button>
+    </div>
+    <p class="book-hint">Arrastra las esquinas o haz clic en las páginas para pasarlas · usa las flechas ← → del teclado · pulsa «Ampliar» para verla en detalle</p>
   </section>
 
   <section class="psection">
@@ -459,265 +374,198 @@
     <img id="lightboxImg" src="" alt="Página ampliada">
   </div>
 
+  <script src="../js/jquery.min.js"></script>
+  <script src="../js/turn.min.js"></script>
   <script>
-    // ── Definición de pliegos: [página izquierda, página derecha] ──
-    var IMG = '../img/libro/';
-    var BLANK = { type: 'blank' };
-    var GAP = { type: 'gap' };
-
-    function pg(file, label) { return { type: 'img', src: IMG + file, label: label }; }
-
-    var spreads = [
-      [BLANK,                                pg('portada-frontal.jpg', 'Portada')],
-      [pg('pag-001.jpg', 'Página 1'),        pg('pag-002.jpg', 'Página 2')],
-      [pg('pag-003.jpg', 'Página 3'),        pg('pag-004.jpg', 'Página 4')],
-      [pg('pag-005.jpg', 'Página 5'),        pg('pag-006.jpg', 'Página 6')],
-      [pg('pag-007.jpg', 'Página 7'),        pg('pag-008.jpg', 'Página 8')],
-      [pg('pag-009.jpg', 'Página 9'),        pg('pag-010.jpg', 'Página 10')],
-      [GAP,                                  pg('pag-166.jpg', 'Página 166')],
-      [pg('pag-167.jpg', 'Página 167'),      pg('pag-168.jpg', 'Página 168')],
-      [pg('pag-169.jpg', 'Página 169'),      pg('pag-170.jpg', 'Página 170')],
-      [pg('pag-171.jpg', 'Página 171'),      pg('pag-172.jpg', 'Página 172')],
-      [pg('pag-173.jpg', 'Página 173'),      pg('pag-174.jpg', 'Página 174')],
-      [pg('pag-175.jpg', 'Página 175'),      pg('pag-176.jpg', 'Página 176')],
-      [pg('portada-trasera.jpg', 'Contraportada'), BLANK]
-    ];
-
-    var labels = [
-      'Portada', 'Páginas 1 – 2', 'Páginas 3 – 4', 'Páginas 5 – 6',
-      'Páginas 7 – 8', 'Páginas 9 – 10', '· · · Página 166',
-      'Páginas 167 – 168', 'Páginas 169 – 170', 'Páginas 171 – 172',
-      'Páginas 173 – 174', 'Páginas 175 – 176', 'Contraportada'
-    ];
-
-    // ── Lista plana de páginas reales (para la vista móvil de una sola página) ──
-    var pages = [];
-    var pageToSpreadIdx = [];
-    var spreadFirstPage = [];
     (function () {
-      var pi = 0;
-      spreads.forEach(function (sp, si) {
-        var first = -1;
-        sp.forEach(function (p) {
-          if (p && p.type !== 'blank') {
-            if (first < 0) first = pi;
-            pages.push(p);
-            pageToSpreadIdx[pi] = si;
-            pi++;
-          }
-        });
-        spreadFirstPage[si] = first < 0 ? (spreadFirstPage[si - 1] || 0) : first;
-      });
-    })();
+      var IMG = '../img/libro/';
+      var GAP = '__gap__';
 
-    var book = document.getElementById('book');
-    var pageLeft = document.getElementById('pageLeft');
-    var pageRight = document.getElementById('pageRight');
-    var leaf = document.getElementById('leaf');
-    var leafFront = document.getElementById('leafFront');
-    var leafBack = document.getElementById('leafBack');
-    var indicator = document.getElementById('indicator');
-    var btnPrev = document.getElementById('btnPrev');
-    var btnNext = document.getElementById('btnNext');
+      // Orden plano de páginas tal como las lee turn.js (1-based).
+      // En modo "double": la 1 va sola a la derecha (portada), luego pliegos
+      // 2-3, 4-5… y la última sola a la izquierda (contraportada).
+      var P = [
+        ['portada-frontal.jpg', 'Portada'],          //  1
+        ['pag-001.jpg', 'Página 1'],                 //  2
+        ['pag-002.jpg', 'Página 2'],                 //  3
+        ['pag-003.jpg', 'Página 3'],                 //  4
+        ['pag-004.jpg', 'Página 4'],                 //  5
+        ['pag-005.jpg', 'Página 5'],                 //  6
+        ['pag-006.jpg', 'Página 6'],                 //  7
+        ['pag-007.jpg', 'Página 7'],                 //  8
+        ['pag-008.jpg', 'Página 8'],                 //  9
+        ['pag-009.jpg', 'Página 9'],                 // 10
+        ['pag-010.jpg', 'Página 10'],                // 11
+        [GAP, 'Recetario'],                          // 12  (separador)
+        ['pag-166.jpg', 'Página 166'],               // 13
+        ['pag-167.jpg', 'Página 167'],               // 14
+        ['pag-168.jpg', 'Página 168'],               // 15
+        ['pag-169.jpg', 'Página 169'],               // 16
+        ['pag-170.jpg', 'Página 170'],               // 17
+        ['pag-171.jpg', 'Página 171'],               // 18
+        ['pag-172.jpg', 'Página 172'],               // 19
+        ['pag-173.jpg', 'Página 173'],               // 20
+        ['pag-174.jpg', 'Página 174'],               // 21
+        ['pag-175.jpg', 'Página 175'],               // 22
+        ['pag-176.jpg', 'Página 176'],               // 23
+        ['portada-trasera.jpg', 'Contraportada']     // 24
+      ];
 
-    var REDUCE = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var mqMobile = window.matchMedia('(max-width: 700px)');
-    function isMobile() { return mqMobile.matches; }
+      var $book = $('#book');
+      var indicator = document.getElementById('indicator');
+      var btnPrev = document.getElementById('btnPrev');
+      var btnNext = document.getElementById('btnNext');
+      var btnZoom = document.getElementById('btnZoom');
+      var lightbox = document.getElementById('lightbox');
+      var lightboxImg = document.getElementById('lightboxImg');
 
-    var spreadIndex = 0;                       // pliego (escritorio)
-    var pageIndex = spreadFirstPage[0] || 0;   // página suelta (móvil)
-    var isAnimating = false;
-
-    // ── Precarga + caché con decode (evita páginas en blanco al girar) ──
-    var cache = new Map();
-    function preloadImage(src) {
-      if (!src) return Promise.resolve(null);
-      if (cache.has(src)) return cache.get(src);
-      var pr = (async function () {
-        var img = new Image();
-        img.src = src;
-        try { if (img.decode) { await img.decode(); } } catch (e) {}
-        return img;
-      })();
-      cache.set(src, pr);
-      return pr;
-    }
-    function srcsOfSpread(i) {
-      if (i < 0 || i >= spreads.length) return [];
-      return spreads[i].filter(function (p) { return p && p.type === 'img'; })
-                       .map(function (p) { return p.src; });
-    }
-    function preloadSpread(i) { return Promise.all(srcsOfSpread(i).map(preloadImage)); }
-    function preloadAround(i) { preloadSpread(i - 1); preloadSpread(i); preloadSpread(i + 1); }
-    function preloadPage(i) { if (pages[i] && pages[i].type === 'img') preloadImage(pages[i].src); }
-
-    // ── Render ──
-    function renderInto(el, page, fade) {
-      var cls = fade ? ' class="book__fade"' : '';
-      if (!page || page.type === 'blank') {
-        el.innerHTML = '<div class="page-blank"></div>';
-      } else if (page.type === 'gap') {
-        el.innerHTML =
-          '<div class="page-gap">' +
-            '<div class="page-gap__dots">· · ·</div>' +
-            '<div class="page-gap__text">155 páginas de recetas, técnicas e información nutricional</div>' +
-            '<div class="page-gap__dots">· · ·</div>' +
-          '</div>';
-      } else {
-        el.innerHTML = '<img' + cls + ' src="' + page.src + '" alt="' + page.label + '">';
-      }
-    }
-    function renderSpread() {
-      renderInto(pageLeft, spreads[spreadIndex][0]);
-      renderInto(pageRight, spreads[spreadIndex][1]);
-    }
-    function renderSingle(fade) { renderInto(pageRight, pages[pageIndex], fade); }
-
-    function updateChrome() {
-      if (isMobile()) {
-        indicator.textContent = (pages[pageIndex] && pages[pageIndex].label) || '';
-        btnPrev.disabled = pageIndex <= 0 || isAnimating;
-        btnNext.disabled = pageIndex >= pages.length - 1 || isAnimating;
-      } else {
-        indicator.textContent = labels[spreadIndex];
-        btnPrev.disabled = spreadIndex <= 0 || isAnimating;
-        btnNext.disabled = spreadIndex >= spreads.length - 1 || isAnimating;
-      }
-    }
-
-    // spinner sólo si la espera supera un umbral razonable
-    var waitTimer = null;
-    function setBusy(b) {
-      if (b) {
-        waitTimer = setTimeout(function () { book.classList.add('is-waiting'); }, 450);
-      } else {
-        clearTimeout(waitTimer);
-        book.classList.remove('is-waiting');
-      }
-      updateChrome();
-    }
-
-    // ── Escritorio: giro 3D de un pliego (una sola hoja) ──
-    function turnDesktop(dir) {
-      var target = spreadIndex + dir;
-      if (target < 0 || target >= spreads.length) return;
-      isAnimating = true;
-      setBusy(true);
-      Promise.all([preloadSpread(spreadIndex), preloadSpread(target)]).then(function () {
-        setBusy(false);
-        if (REDUCE) {
-          spreadIndex = target;
-          renderInto(pageLeft, spreads[spreadIndex][0], true);
-          renderInto(pageRight, spreads[spreadIndex][1], true);
-          endTurn();
-          preloadAround(spreadIndex);
-          return;
-        }
-        var from, to;
-        if (dir === 1) {
-          renderInto(leafFront, spreads[spreadIndex][1]);   // derecha actual (se levanta)
-          renderInto(leafBack, spreads[target][0]);         // próxima izquierda (reverso)
-          renderInto(pageRight, spreads[target][1]);        // próxima derecha, ya lista debajo
-          leaf.className = 'book__leaf is-active';
-          from = 'rotateY(0deg)'; to = 'rotateY(-180deg)';
+      // ── Construir las páginas (imágenes en carga diferida vía data-src) ──
+      P.forEach(function (p, i) {
+        var $pg = $('<div class="page"></div>').attr('data-idx', i + 1);
+        if (p[0] === GAP) {
+          $pg.addClass('page--gap').html(
+            '<div class="page-gap">' +
+              '<div class="page-gap__dots">· · ·</div>' +
+              '<div class="page-gap__text">155 páginas de recetas, técnicas e información nutricional</div>' +
+              '<div class="page-gap__dots">· · ·</div>' +
+            '</div>');
         } else {
-          renderInto(leafFront, spreads[target][1]);        // derecha anterior (llega al final)
-          renderInto(leafBack, spreads[spreadIndex][0]);    // izquierda actual (se levanta)
-          renderInto(pageLeft, spreads[target][0]);         // izquierda anterior, ya lista debajo
-          leaf.className = 'book__leaf is-active is-back';
-          from = 'rotateY(-180deg)'; to = 'rotateY(0deg)';
+          $pg.html('<img data-src="' + IMG + p[0] + '" alt="' + p[1] + '">');
         }
-        leaf.style.transform = from;
-        void leaf.offsetWidth;
-        // Web Animations API: el giro se reproduce siempre, sin depender de
-        // tiempos de transición CSS (evita que se "pegue" o salte).
-        requestAnimationFrame(function () { leaf.classList.add('is-turning'); });   // dispara el sombreado
-        var anim = leaf.animate(
-          [{ transform: from }, { transform: to }],
-          { duration: 900, easing: 'cubic-bezier(0.45, 0.05, 0.2, 1)', fill: 'none' }
-        );
-        anim.onfinish = function () {
-          spreadIndex = target;
-          renderSpread();                  // pliego definitivo (imágenes ya decodificadas → sin salto)
-          leaf.className = 'book__leaf';   // oculta la hoja
-          leaf.style.transform = '';
-          endTurn();
-          preloadAround(spreadIndex);
-        };
+        $book.append($pg);
       });
-    }
 
-    // ── Móvil: una sola página, con fundido suave ──
-    function turnMobile(dir) {
-      var target = pageIndex + dir;
-      if (target < 0 || target >= pages.length) return;
-      isAnimating = true;
-      setBusy(true);
-      preloadImage(pages[target] && pages[target].src).then(function () {
-        setBusy(false);
-        pageIndex = target;
-        renderSingle(true);
-        endTurn();
-        preloadPage(target + 1);
-        preloadPage(target - 1);
-      });
-    }
-
-    function endTurn() { isAnimating = false; updateChrome(); }
-
-    function goNext() { if (isAnimating) return; if (isMobile()) turnMobile(1); else turnDesktop(1); }
-    function goPrev() { if (isAnimating) return; if (isMobile()) turnMobile(-1); else turnDesktop(-1); }
-
-    btnNext.addEventListener('click', goNext);
-    btnPrev.addEventListener('click', goPrev);
-    pageRight.addEventListener('click', goNext);
-    pageLeft.addEventListener('click', goPrev);
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'ArrowRight') goNext();
-      else if (e.key === 'ArrowLeft') goPrev();
-    });
-
-    // ── Cambio de modo escritorio ↔ móvil ──
-    function syncMode() {
-      if (isAnimating) return;
-      if (isMobile()) {
-        pageIndex = spreadFirstPage[spreadIndex] || 0;
-        renderSingle(false);
-      } else {
-        spreadIndex = pageToSpreadIdx[pageIndex] || 0;
-        renderSpread();
-        leaf.className = 'book__leaf';
+      // ── Carga diferida de imágenes ──
+      function ensure(n) {
+        if (n < 1 || n > P.length) return;
+        var img = $book.find('[data-idx="' + n + '"] img')[0];
+        if (img && img.getAttribute('data-src')) {
+          img.src = img.getAttribute('data-src');
+          img.removeAttribute('data-src');
+        }
       }
+      function loadAround(page) {
+        for (var k = page - 2; k <= page + 3; k++) ensure(k);
+      }
+
+      // ── Tamaño responsive ──
+      var DOUBLE = 2232 / 1222, SINGLE = 1116 / 1222;
+      var mqMobile = window.matchMedia('(max-width: 700px)');
+      function computeSize() {
+        var avail = $('.book-wrap').width() || 940;
+        if (mqMobile.matches) {
+          var w = Math.min(avail, 520);
+          return { w: w, h: Math.round(w / SINGLE), disp: 'single' };
+        }
+        var wd = Math.min(avail, 940);
+        return { w: wd, h: Math.round(wd / DOUBLE), disp: 'double' };
+      }
+
+      var REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var ready = false;
+      var curDisp;
+
+      // ── Etiquetas del indicador ──
+      function pageNum(tp) {
+        if (tp >= 2 && tp <= 11) return tp - 1;           //  Página 1–10
+        if (tp >= 13 && tp <= 23) return 166 + (tp - 13); //  Página 166–176
+        return null;
+      }
+      function viewLabel(view) {
+        var ps = (view || []).filter(function (n) { return n > 0; });
+        if (!ps.length) return '';
+        if (ps.length === 1) {
+          var p = ps[0];
+          if (p === 1) return 'Portada';
+          if (p === P.length) return 'Contraportada';
+          if (p === 12) return 'Recetario';
+          var n = pageNum(p); return n ? ('Página ' + n) : '';
+        }
+        var a = ps[0], b = ps[ps.length - 1];
+        if (a === 1) return 'Portada';
+        if (b === P.length) return 'Contraportada';
+        if (a === 12) return '· · · Página ' + pageNum(b);
+        var na = pageNum(a), nb = pageNum(b);
+        return (na && nb) ? ('Páginas ' + na + ' – ' + nb) : '';
+      }
+      function updateChrome() {
+        if (!ready) return;
+        var v = $book.turn('view');
+        indicator.textContent = viewLabel(v);
+        btnPrev.disabled = !!(v && v.indexOf(1) >= 0);
+        btnNext.disabled = !!(v && v.indexOf(P.length) >= 0);
+      }
+
+      // ── Inicializar turn.js ──
+      var s = computeSize();
+      curDisp = s.disp;
+      $book.turn({
+        width: s.w,
+        height: s.h,
+        display: s.disp,
+        acceleration: true,
+        gradients: !('ontouchstart' in window),
+        elevation: 50,
+        duration: REDUCE ? 1 : 650,
+        when: {
+          turning: function (e, page, view) { loadAround(page); },
+          turned: function (e, page, view) { loadAround(page); updateChrome(); }
+        }
+      });
+      ready = true;
+      $book.addClass('is-ready');
+      loadAround(1);
       updateChrome();
-    }
-    if (mqMobile.addEventListener) mqMobile.addEventListener('change', syncMode);
-    else if (mqMobile.addListener) mqMobile.addListener(syncMode);
 
-    // ── Lightbox (doble clic para ampliar) ──
-    var lightbox = document.getElementById('lightbox');
-    var lightboxImg = document.getElementById('lightboxImg');
-    function openLightbox(page) {
-      if (!page || page.type !== 'img') return;
-      lightboxImg.src = page.src;
-      lightbox.classList.add('open');
-    }
-    pageLeft.addEventListener('dblclick', function () {
-      openLightbox(isMobile() ? pages[pageIndex] : spreads[spreadIndex][0]);
-    });
-    pageRight.addEventListener('dblclick', function () {
-      openLightbox(isMobile() ? pages[pageIndex] : spreads[spreadIndex][1]);
-    });
-    lightbox.addEventListener('click', function () { lightbox.classList.remove('open'); });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') lightbox.classList.remove('open');
-    });
+      // Precarga de fondo del resto de páginas (sin bloquear el primer render)
+      (function () {
+        var k = 1;
+        (function step() {
+          if (k <= P.length) { ensure(k++); setTimeout(step, 70); }
+        })();
+      })();
 
-    // ── Init ──
-    if (isMobile()) { renderSingle(false); } else { renderSpread(); }
-    updateChrome();
-    preloadAround(0);
-    preloadPage(pageIndex + 1);
-    preloadPage(pageIndex - 1);
+      // ── Controles ──
+      btnNext.addEventListener('click', function () { $book.turn('next'); });
+      btnPrev.addEventListener('click', function () { $book.turn('previous'); });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowRight') $book.turn('next');
+        else if (e.key === 'ArrowLeft') $book.turn('previous');
+        else if (e.key === 'Escape') lightbox.classList.remove('open');
+      });
+
+      // ── Resize / cambio escritorio ↔ móvil ──
+      var rz;
+      window.addEventListener('resize', function () {
+        clearTimeout(rz);
+        rz = setTimeout(function () {
+          var s2 = computeSize();
+          if (s2.disp !== curDisp) { $book.turn('display', s2.disp); curDisp = s2.disp; }
+          $book.turn('size', s2.w, s2.h);
+          updateChrome();
+        }, 150);
+      });
+
+      // ── Lightbox (botón «Ampliar») ──
+      function openLightbox(src, alt) {
+        lightboxImg.src = src;
+        lightboxImg.alt = alt || 'Página ampliada';
+        lightbox.classList.add('open');
+      }
+      btnZoom.addEventListener('click', function () {
+        var v = ($book.turn('view') || []).filter(function (n) { return n > 0; });
+        if (!v.length) return;
+        var tp = v[v.length - 1];              // página de la derecha (o única)
+        var p = P[tp - 1];
+        if (p && p[0] !== GAP) { ensure(tp); openLightbox(IMG + p[0], p[1]); return; }
+        if (v.length > 1) {                    // si la derecha es el separador, usa la izquierda
+          var lp = P[v[0] - 1];
+          if (lp && lp[0] !== GAP) { ensure(v[0]); openLightbox(IMG + lp[0], lp[1]); }
+        }
+      });
+      lightbox.addEventListener('click', function () { lightbox.classList.remove('open'); });
+    })();
   </script>
 </body>
 </html>
