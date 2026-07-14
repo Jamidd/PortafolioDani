@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "cl.lyssa.app.admin",
+      "sha256_cert_fingerprints": [
+        "C1:FF:28:29:85:E2:89:5B:D2:20:21:1C:D1:97:E1:08:3A:17:6E:83:8A:0C:1A:D9:56:30:32:2A:A1:DF:F5:C8"
+      ]
+    }
+  }
+]

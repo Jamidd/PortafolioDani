@@ -1,0 +1,1 @@
+import{j as e}from"./index-Butv8xMM.js";import{P as n}from"./Pagination-BOKSykn3.js";const g=({pagination:o,onPageChange:t})=>{const{page:a,pages:s}=o;return e.jsx(n,{page:a,totalPages:s,onPageChange:t,hideIfSinglePage:!0})};export{g as C};

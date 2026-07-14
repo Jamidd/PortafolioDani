@@ -1,0 +1,1 @@
+import{bb as o,ba as m,bc as u}from"./index-Butv8xMM.js";const c=o();function n({props:t,name:r,defaultTheme:a,themeId:s}){let e=m(a);return s&&(e=e[s]||e),u({theme:e,name:r,props:t})}export{c as s,n as u};

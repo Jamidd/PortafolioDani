@@ -1,0 +1,23 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "cl.lyssa.app.report.twa",
+      "sha256_cert_fingerprints": [
+        "EF:E5:86:A1:24:A1:AA:16:64:47:E2:D2:4E:3B:58:8E:CB:36:E3:B0:E5:CB:AF:C2:40:23:35:8E:1B:C6:21:CB",
+        "BD:92:78:91:E8:5D:D4:4B:59:AE:D3:E5:0D:2D:BE:75:1E:59:A2:00:AD:3A:99:31:F9:DF:28:8C:8E:C8:88:71"
+      ]
+    }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "cl.lyssa.app.report",
+      "sha256_cert_fingerprints": [
+        "F9:DB:8C:8C:99:48:89:76:C5:0E:E7:CF:83:B5:71:23:D9:48:DD:5F:E3:69:D3:76:7B:86:2D:65:6F:FC:D0:26"
+      ]
+    }
+  }
+]
