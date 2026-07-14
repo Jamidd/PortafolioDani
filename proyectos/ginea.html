@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ginea · UX/UI e Investigación — Daniela Ruiz</title>
+  <meta name="description" content="Caso de estudio UX de Ginea: plataforma de acompañamiento ginecológico. Investigación, definición de necesidades, mapa de experiencia, prototipo y testeo exploratorio.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/proyecto.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90' font-family='serif' fill='%237C3A62'>D.</text></svg>">
+  <style>
+    /* ── Paleta Ginea (tomada de la interfaz real) ── */
+    .g {
+      --g-gold:  #F2B33C;
+      --g-plum:  #8E2465;
+      --g-plum-d:#6E1A4E;
+      --g-coral: #EFA0AC;
+      --g-pink:  #F9DBE0;
+      --g-pink-2:#FCECEF;
+      --g-good:  #3E9B6C;
+    }
+
+    /* ── Cabecera: banda con teléfonos flotando ── */
+    .g-band { position: relative; padding: 20px 24px 8px; }
+    .g-band__row {
+      max-width: 900px; margin: 0 auto;
+      display: flex; align-items: flex-end; justify-content: center; gap: 0;
+    }
+    .g-band__row img {
+      width: 30%; height: auto; display: block;
+      filter: drop-shadow(0 26px 40px rgba(120, 30, 80, 0.22));
+    }
+    .g-band__row img:nth-child(1) { transform: rotate(-5deg) translateY(14px); z-index: 1; }
+    .g-band__row img:nth-child(2) { width: 33%; z-index: 3; margin: 0 -3%; }
+    .g-band__row img:nth-child(3) { transform: rotate(5deg) translateY(14px); z-index: 1; }
+
+    /* ── Desafío: gran pregunta ── */
+    .g-quote {
+      max-width: 900px; margin: 8px auto 0;
+      font-family: var(--serif); font-weight: 500;
+      font-size: clamp(23px, 3.4vw, 34px); line-height: 1.32; color: var(--ink);
+    }
+    .g-quote b { color: var(--g-plum); font-weight: 600; }
+    .g-kicker {
+      font-size: 12px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--g-plum); margin: 0 0 14px;
+    }
+
+    /* citas de investigación */
+    .g-cites { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 30px; }
+    .g-cite {
+      background: var(--g-pink-2); border-left: 3px solid var(--g-coral);
+      border-radius: 0 10px 10px 0; padding: 20px 22px;
+    }
+    .g-cite p { margin: 0; font-family: var(--serif); font-style: italic; font-size: 17px; line-height: 1.5; color: var(--ink-soft); }
+    .g-cite span { display: block; margin-top: 12px; font-family: var(--sans); font-style: normal; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--g-plum); }
+
+    /* ── Sub-título de sección ── */
+    .g-sub { margin: 42px 0 18px; font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--g-plum); }
+
+    /* ── Investigación: cifras + gráfico ── */
+    .g-two { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 32px; align-items: start; }
+    .g-figure { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 22px 24px; }
+    .g-figure__cap { margin: 0 0 16px; font-size: 13px; font-weight: 600; color: var(--ink); }
+    .g-figure__cap small { display: block; font-weight: 400; color: var(--ink-muted); font-size: 11.5px; letter-spacing: 0.04em; margin-top: 3px; }
+
+    /* barras de emociones (una sola tonalidad, magnitud) */
+    .g-bars { display: flex; flex-direction: column; gap: 10px; }
+    .g-bar { display: grid; grid-template-columns: 108px 1fr; align-items: center; gap: 12px; }
+    .g-bar__l { font-size: 12.5px; color: var(--ink-soft); text-align: right; }
+    .g-bar__track { position: relative; height: 22px; background: var(--g-pink-2); border-radius: 5px; }
+    .g-bar__fill { position: absolute; inset: 0 auto 0 0; background: var(--g-plum); border-radius: 5px; }
+    .g-bar__v { position: absolute; top: 50%; transform: translateY(-50%); left: calc(var(--w) + 8px); font-size: 12px; font-weight: 600; color: var(--g-plum); white-space: nowrap; }
+    .g-bar.is-lead .g-bar__l { color: var(--ink); font-weight: 600; }
+    .g-bar.is-alt .g-bar__fill { background: var(--g-coral); }
+    .g-bar.is-alt .g-bar__v { color: var(--g-plum-d); }
+
+    /* demografía mini */
+    .g-demo { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+    .g-demo span { font-size: 11.5px; color: var(--ink-soft); background: var(--bg-alt); border: 1px solid var(--border); border-radius: 999px; padding: 4px 12px; }
+    .g-demo b { color: var(--g-plum); font-weight: 600; }
+
+    /* insights list */
+    .g-insights { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+    .g-insights li { position: relative; padding-left: 30px; font-size: 15px; font-weight: 300; line-height: 1.6; color: var(--ink-soft); }
+    .g-insights li b { color: var(--ink); font-weight: 600; }
+    .g-insights li::before { content: ""; position: absolute; left: 0; top: 7px; width: 14px; height: 14px; border-radius: 50%; background: var(--g-gold); box-shadow: inset 0 0 0 3px #fff, 0 0 0 1px var(--g-gold); }
+
+    /* ── Mapa de experiencia ── */
+    .g-journey { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: #fff; }
+    .g-jphases { display: grid; grid-template-columns: repeat(3, 1fr); }
+    .g-jphase { padding: 18px 20px 22px; border-right: 1px solid var(--border); }
+    .g-jphase:last-child { border-right: none; }
+    .g-jphase__k { margin: 0 0 12px; font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--g-plum); }
+    .g-jstages { display: flex; flex-wrap: wrap; gap: 7px; }
+    .g-jstage { font-size: 11.5px; color: var(--ink-soft); background: var(--g-pink-2); border-radius: 6px; padding: 6px 10px; line-height: 1.3; }
+    .g-curve { padding: 6px 8px 14px; border-top: 1px dashed var(--border); background: linear-gradient(180deg, #fff, #FFF9FA); }
+    .g-curve svg { display: block; width: 100%; height: 96px; }
+    .g-curve__legend { display: flex; justify-content: space-between; padding: 0 14px; font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-muted); }
+
+    /* ── Oportunidad: formulación + atributos ── */
+    .g-form { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .g-fcard { background: #fff; border: 1px solid var(--border); border-top: 3px solid var(--g-plum); border-radius: 10px; padding: 20px 22px; }
+    .g-fcard h4 { margin: 0 0 8px; font-family: var(--serif); font-weight: 600; font-size: 22px; color: var(--g-plum); }
+    .g-fcard p { margin: 0; font-size: 14px; font-weight: 300; line-height: 1.65; color: var(--ink-soft); }
+    .g-attrs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 20px; }
+    .g-attr { text-align: center; border: 1px solid var(--border); border-radius: 10px; padding: 18px 12px; background: var(--bg-alt); }
+    .g-attr b { display: block; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--g-plum); margin-bottom: 6px; }
+    .g-attr span { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+
+    /* ── Hallazgo → Decisión → Aplicación ── */
+    .g-hda-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .g-hda { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: #fff; display: flex; flex-direction: column; }
+    .g-hda__row { padding: 16px 20px; }
+    .g-hda__row + .g-hda__row { border-top: 1px solid var(--border); }
+    .g-hda__k { margin: 0 0 6px; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; display: flex; align-items: center; gap: 7px; }
+    .g-hda__k::before { content: ""; width: 8px; height: 8px; border-radius: 50%; }
+    .g-hda__row--h .g-hda__k { color: #C23B2E; } .g-hda__row--h .g-hda__k::before { background: #C23B2E; }
+    .g-hda__row--d .g-hda__k { color: var(--g-plum); } .g-hda__row--d .g-hda__k::before { background: var(--g-plum); }
+    .g-hda__row--a .g-hda__k { color: var(--g-good); } .g-hda__row--a .g-hda__k::before { background: var(--g-good); }
+    .g-hda__row--a { background: #F5FAF7; margin-top: auto; }
+    .g-hda__t { margin: 0; font-size: 13.5px; line-height: 1.55; color: var(--ink-soft); }
+    .g-hda__t b { color: var(--ink); font-weight: 600; }
+
+    /* ── Flujo con flechas ── */
+    .g-flow { display: flex; align-items: flex-start; gap: 6px; flex-wrap: wrap; justify-content: center; }
+    .g-flow__step { flex: 1 1 130px; max-width: 168px; text-align: center; }
+    .g-flow__thumb { border-radius: 16px; overflow: hidden; background: var(--g-pink-2); margin-bottom: 12px; box-shadow: 0 14px 24px -12px rgba(120,30,80,0.4); }
+    .g-flow__thumb img { display: block; width: 100%; height: 176px; object-fit: cover; object-position: top center; }
+    .g-flow__n { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: var(--g-plum); color: #fff; font-size: 11px; font-weight: 700; margin-bottom: 8px; }
+    .g-flow__h { margin: 0 0 4px; font-size: 13.5px; font-weight: 600; color: var(--ink); }
+    .g-flow__d { margin: 0; font-size: 11.5px; line-height: 1.45; color: var(--ink-soft); }
+    .g-flow__arrow { align-self: center; color: var(--g-coral); font-size: 24px; padding-top: 60px; flex: 0 0 auto; }
+
+    /* ── Wireframe esquemático → interfaz ── */
+    .g-wire-compare { display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; }
+    .g-wire-side { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .g-wtag { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 11px; border-radius: 999px; }
+    .g-wtag--wire { background: #ECE7EF; color: #6E1A4E; }
+    .g-wtag--ui { background: var(--g-pink); color: var(--g-plum-d); }
+    .g-wire { width: 210px; aspect-ratio: 210/430; border: 7px solid #1c1420; border-radius: 26px; background: #fff; padding: 14px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 9px; box-shadow: 0 18px 30px rgba(33,29,36,0.16); }
+    .g-wire__head { height: 46px; border-radius: 8px; background: #EFE7C9; }
+    .g-wire__card { height: 52px; border-radius: 8px; background: #F2DEE2; }
+    .g-wire__lbl { height: 9px; width: 60%; border-radius: 3px; background: #E4DAD0; }
+    .g-wire__cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; }
+    .g-wire__cards i { height: 40px; border-radius: 7px; background: #EFE3B8; display: block; }
+    .g-wire__bar { height: 30px; border-radius: 999px; background: #E6C3CD; }
+    .g-wire__cards2 { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    .g-wire__cards2 i { height: 34px; border-radius: 7px; background: #F2DEE2; display: block; }
+    .g-wire-real { width: 210px; filter: drop-shadow(0 18px 30px rgba(120,30,80,0.22)); }
+    .g-wire-arrow { color: var(--g-coral); font-size: 30px; align-self: center; }
+
+    /* ── Reproductor: recorrido lento de una tarea ── */
+    .g-player { display: grid; grid-template-columns: 300px 1fr; gap: 40px; align-items: center; background: var(--g-pink-2); border: 1px solid var(--g-pink); border-radius: 16px; padding: 34px 36px; }
+    .g-shell { position: relative; width: 300px; margin: 0 auto; }
+    .g-slides { position: relative; width: 100%; aspect-ratio: 640/1276; }
+    .g-slide { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity .7s ease; }
+    .g-slide.is-on { opacity: 1; }
+    .g-progress { position: absolute; left: 12%; right: 12%; bottom: -14px; height: 4px; border-radius: 999px; background: rgba(142,36,101,0.18); overflow: hidden; }
+    .g-progress i { display: block; height: 100%; width: 0; background: var(--g-plum); border-radius: 999px; }
+    .g-player.is-playing .g-progress i { animation: g-prog var(--dur,3400ms) linear forwards; }
+    @keyframes g-prog { from { width: 0; } to { width: 100%; } }
+
+    .g-play-ui { max-width: 460px; }
+    .g-play-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .g-step-n { font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: var(--g-plum); }
+    .g-play-task { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-muted); }
+    .g-step-title { margin: 0 0 8px; font-family: var(--serif); font-weight: 600; font-size: 27px; color: var(--ink); }
+    .g-step-desc { margin: 0 0 22px; font-size: 15px; font-weight: 300; line-height: 1.65; color: var(--ink-soft); min-height: 3em; }
+    .g-controls { display: flex; align-items: center; gap: 16px; }
+    .g-play-btn { display: inline-flex; align-items: center; gap: 8px; border: none; cursor: pointer; background: var(--g-plum); color: #fff; font-family: var(--sans); font-size: 13px; font-weight: 600; letter-spacing: 0.04em; padding: 10px 18px; border-radius: 999px; }
+    .g-play-btn:hover { background: var(--g-plum-d); }
+    .g-dots { list-style: none; display: flex; gap: 9px; margin: 0; padding: 0; }
+    .g-dots button { width: 11px; height: 11px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: rgba(142,36,101,0.24); transition: background .2s, transform .2s; }
+    .g-dots button:hover { background: rgba(142,36,101,0.5); }
+    .g-dots button.on { background: var(--g-plum); transform: scale(1.25); }
+
+    /* ── Capturas grandes ── */
+    .g-shots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+    .g-shot { margin: 0; text-align: center; }
+    .g-shot img { width: 100%; height: auto; filter: drop-shadow(0 22px 34px rgba(120,30,80,0.2)); cursor: zoom-in; transition: transform .35s ease; }
+    .g-shot img:hover { transform: translateY(-6px); }
+    .g-shot figcaption { margin-top: 14px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); }
+
+    /* ── Resultados: stat hero + tiles ── */
+    .g-hero-stat { display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; background: linear-gradient(120deg, var(--g-plum), var(--g-plum-d)); color: #fff; border-radius: 14px; padding: 26px 30px; margin-bottom: 26px; }
+    .g-hero-stat b { font-family: var(--serif); font-weight: 600; font-size: clamp(44px, 8vw, 66px); line-height: 1; }
+    .g-hero-stat span { font-size: 15px; font-weight: 300; line-height: 1.5; max-width: 460px; color: rgba(255,255,255,0.92); }
+    .g-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .g-tile { border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; background: #fff; }
+    .g-tile__v { font-family: var(--serif); font-weight: 600; font-size: 30px; color: var(--g-plum); line-height: 1; }
+    .g-tile__l { margin: 6px 0 12px; font-size: 13px; color: var(--ink-soft); line-height: 1.4; }
+    .g-tile__track { height: 6px; border-radius: 999px; background: var(--g-pink-2); overflow: hidden; }
+    .g-tile__fill { height: 100%; background: var(--g-good); border-radius: 999px; }
+    .g-tiles-note { margin: 14px 0 0; font-size: 12px; color: var(--ink-muted); }
+
+    /* ── Callout de limitación (transparencia metodológica) ── */
+    .g-limit { display: flex; gap: 18px; align-items: flex-start; border: 1px solid #E7C9B8; background: #FCF3EC; border-radius: 12px; padding: 22px 24px; margin-top: 30px; }
+    .g-limit__icon { flex: none; width: 34px; height: 34px; border-radius: 50%; background: #E8873E; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 19px; }
+    .g-limit h4 { margin: 2px 0 7px; font-size: 15px; font-weight: 600; color: #9A5220; }
+    .g-limit p { margin: 0; font-size: 13.5px; line-height: 1.65; color: var(--ink-soft); }
+    .g-limit p b { color: var(--ink); font-weight: 600; }
+
+    /* ficha */
+    .ficha { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 28px; margin-top: 8px; }
+    .ficha dt { font-size: 11.5px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--g-plum); margin-bottom: 6px; }
+    .ficha dd { margin: 0; font-size: 15px; font-weight: 300; color: var(--ink-soft); line-height: 1.6; }
+
+    @media (max-width: 820px) {
+      .g-two, .g-player { grid-template-columns: 1fr; }
+      .g-player { gap: 26px; }
+      .g-shell, .g-slides { max-width: 260px; }
+      .g-form { grid-template-columns: 1fr; }
+      .g-attrs { grid-template-columns: 1fr 1fr; }
+      .g-hda-grid { grid-template-columns: 1fr; }
+      .g-shots { grid-template-columns: 1fr 1fr; }
+      .g-tiles { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 560px) {
+      .g-cites { grid-template-columns: 1fr; }
+      .g-jphases { grid-template-columns: 1fr; }
+      .g-jphase { border-right: none; border-bottom: 1px solid var(--border); }
+      .g-flow__arrow { display: none; }
+      .g-tiles { grid-template-columns: 1fr; }
+      .g-band__row img { width: 33%; }
+    }
+  </style>
+</head>
+<body class="g">
+
+  <nav class="pnav">
+    <div class="pnav__inner">
+      <a href="../index.html#proyectos" class="pnav__back">← Volver al portafolio</a>
+      <a href="../index.html" class="pnav__brand">Daniela Ruiz<span>.</span></a>
+    </div>
+  </nav>
+
+  <header class="phero">
+    <div class="phero__number">05</div>
+    <p class="phero__category">UX/UI · Investigación</p>
+    <h1 class="phero__title">Ginea</h1>
+    <p class="phero__lead"><strong>Ginecología amable.</strong> Plataforma de información y acompañamiento que busca reducir el estrés y la incertidumbre antes de una consulta ginecológica. Este es un <strong>caso de estudio breve</strong>, centrado en la evidencia: investigación, definición de necesidades, prototipo y testeo. Proyecto académico y exploratorio.</p>
+  </header>
+
+  <div class="g-band">
+    <div class="g-band__row">
+      <img src="../img/ginea/checklist.png" alt="Ginea · pantalla de checklist" loading="lazy">
+      <img src="../img/ginea/home.png" alt="Ginea · pantalla de inicio" loading="lazy">
+      <img src="../img/ginea/search.png" alt="Ginea · búsqueda de profesionales" loading="lazy">
+    </div>
+  </div>
+
+  <!-- 1 · Desafío y contexto -->
+  <section class="psection">
+    <p class="g-kicker">01 · Desafío y contexto</p>
+    <p class="g-quote">¿Cómo podríamos <b>reducir el estrés y la incertidumbre</b> en las pacientes mediante el acceso claro, comprensible y empático a información sobre <b>procedimientos ginecológicos</b>?</p>
+    <p class="psection__note" style="margin-top:26px;max-width:760px;">Las visitas ginecológicas pueden ser estresantes por la falta de claridad y la dificultad para entender la información médica técnica. Muchas mujeres experimentan incertidumbre frente a procedimientos invasivos, agravada por una comunicación a veces limitada o poco empática. El proyecto parte de escuchar esa experiencia.</p>
+    <div class="g-cites">
+      <figure class="g-cite">
+        <p>“Para mí es muy importante que la doctora sea amable y carismática… ir al ginecólogo no es una experiencia súper cómoda, y tener a alguien comunicativo hace la diferencia.”</p>
+        <span>Cita de investigación</span>
+      </figure>
+      <figure class="g-cite">
+        <p>“Fue todo muy invasivo. Cuando me abrieron con el espéculo, en especial porque no me dijeron que lo iban a hacer.”</p>
+        <span>Cita de investigación</span>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 2 · Investigación e insights -->
+  <section class="psection">
+    <p class="g-kicker">02 · Investigación e insights principales</p>
+    <h2 class="psection__title">Qué encontramos al escuchar a las usuarias</h2>
+    <p class="psection__note">Combinamos una encuesta amplia con entrevistas y citas de pacientes para entender cómo se sienten al enfrentar una consulta y qué información echan de menos.</p>
+
+    <div class="g-two">
+      <div class="g-figure">
+        <p class="g-figure__cap">Emociones predominantes al reservar una consulta<small>Encuesta · % de menciones · la inseguridad domina</small></p>
+        <div class="g-bars">
+          <div class="g-bar is-lead"><span class="g-bar__l">Inseguridad</span><div class="g-bar__track"><div class="g-bar__fill" style="width:37.7%"></div><span class="g-bar__v" style="--w:37.7%">37,7%</span></div></div>
+          <div class="g-bar"><span class="g-bar__l">Regular</span><div class="g-bar__track"><div class="g-bar__fill" style="width:29%"></div><span class="g-bar__v" style="--w:29%">29%</span></div></div>
+          <div class="g-bar is-alt"><span class="g-bar__l">Alivio</span><div class="g-bar__track"><div class="g-bar__fill" style="width:10.1%"></div><span class="g-bar__v" style="--w:10.1%">10,1%</span></div></div>
+          <div class="g-bar"><span class="g-bar__l">Nervios</span><div class="g-bar__track"><div class="g-bar__fill" style="width:8.7%"></div><span class="g-bar__v" style="--w:8.7%">8,7%</span></div></div>
+          <div class="g-bar"><span class="g-bar__l">Desconfianza</span><div class="g-bar__track"><div class="g-bar__fill" style="width:8.7%"></div><span class="g-bar__v" style="--w:8.7%">8,7%</span></div></div>
+          <div class="g-bar"><span class="g-bar__l">Incomodidad</span><div class="g-bar__track"><div class="g-bar__fill" style="width:8.7%"></div><span class="g-bar__v" style="--w:8.7%">8,7%</span></div></div>
+        </div>
+        <div class="g-demo">
+          <span><b>69</b> encuestadas</span>
+          <span><b>57,4%</b> de 19–25 años</span>
+          <span><b>35,3%</b> de 26+ años</span>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="g-sub" style="margin-top:0;">Insights principales</h3>
+        <ul class="g-insights">
+          <li><b>El manejo de la información es lo más valorado</b> por las mujeres al visitar al ginecólogo.</li>
+          <li>El acceso a información <b>clara y relevante reduce la incertidumbre</b> previa a la consulta.</li>
+          <li>La información funciona mejor cuando es <b>visual y didáctica</b>, no un texto técnico extenso.</li>
+          <li>Debe entregarse de forma <b>gradual y según la necesidad</b>, para no sobrecargar a la usuaria.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · Mapa de experiencia -->
+  <section class="psection">
+    <p class="g-kicker">03 · Mapa de experiencia resumido</p>
+    <h2 class="psection__title">El viaje de la paciente, de la angustia a la calma</h2>
+    <p class="psection__note">Sintetizamos el recorrido en tres momentos. La curva emocional muestra el objetivo del diseño: acompañar desde la ansiedad inicial hacia una experiencia más informada y tranquila.</p>
+    <div class="g-journey">
+      <div class="g-jphases">
+        <div class="g-jphase">
+          <p class="g-jphase__k">Pre-servicio</p>
+          <div class="g-jstages">
+            <span class="g-jstage">Reserva de la consulta</span>
+            <span class="g-jstage">Descarga y registro</span>
+            <span class="g-jstage">Información y preparación</span>
+            <span class="g-jstage">Listado de preguntas</span>
+          </div>
+        </div>
+        <div class="g-jphase">
+          <p class="g-jphase__k">Servicio</p>
+          <div class="g-jstages">
+            <span class="g-jstage">Sala de espera y repaso</span>
+            <span class="g-jstage">Chatbot de empatía</span>
+            <span class="g-jstage">Explicación visual</span>
+            <span class="g-jstage">Uso de preguntas</span>
+          </div>
+        </div>
+        <div class="g-jphase">
+          <p class="g-jphase__k">Post-servicio</p>
+          <div class="g-jstages">
+            <span class="g-jstage">Resumen de la consulta</span>
+            <span class="g-jstage">Seguimiento emocional</span>
+            <span class="g-jstage">Próximas consultas</span>
+          </div>
+        </div>
+      </div>
+      <div class="g-curve">
+        <svg viewBox="0 0 900 96" preserveAspectRatio="none" role="img" aria-label="Curva emocional: de ansiedad alta a tranquilidad">
+          <defs><linearGradient id="gc" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#C23B2E"/><stop offset="0.5" stop-color="#E8873E"/><stop offset="1" stop-color="#3E9B6C"/>
+          </linearGradient></defs>
+          <path d="M0,74 C150,80 210,40 300,44 C420,50 470,30 600,34 C720,38 800,20 900,18" fill="none" stroke="url(#gc)" stroke-width="3.5" stroke-linecap="round"/>
+          <circle cx="40" cy="75" r="4.5" fill="#C23B2E"/>
+          <circle cx="450" cy="41" r="4.5" fill="#E8873E"/>
+          <circle cx="860" cy="19" r="4.5" fill="#3E9B6C"/>
+        </svg>
+        <div class="g-curve__legend"><span>Ansiedad / estrés alto</span><span>Neutral</span><span>Emocionada / tranquila</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · Oportunidad de diseño -->
+  <section class="psection">
+    <p class="g-kicker">04 · Oportunidad de diseño</p>
+    <h2 class="psection__title">De las necesidades a una propuesta</h2>
+    <p class="psection__note">La formulación del proyecto ordena qué construir, por qué y para qué, guiada por cuatro atributos que debía cumplir la plataforma.</p>
+    <div class="g-form">
+      <div class="g-fcard"><h4>¿Qué?</h4><p>Una plataforma de información sobre procedimientos ginecológicos: clara, accesible y empática, que guía en cada paso, desde pedir la consulta hasta el post-servicio.</p></div>
+      <div class="g-fcard"><h4>¿Por qué?</h4><p>Porque la falta de claridad y el lenguaje técnico generan incertidumbre ante procedimientos invasivos, agravada por una comunicación poco empática.</p></div>
+      <div class="g-fcard"><h4>¿Para qué?</h4><p>Para empoderar a las pacientes, mejorar su bienestar mental y fomentar una cultura de autocuidado y prevención en salud ginecológica.</p></div>
+    </div>
+    <div class="g-attrs">
+      <div class="g-attr"><b>Accesible</b><span>Enlace directo desde la reserva; compatible con distintos dispositivos.</span></div>
+      <div class="g-attr"><b>Intuitivo</b><span>Enfocarse en la consulta, no en aprender a navegar la app.</span></div>
+      <div class="g-attr"><b>Educativo</b><span>Comprender los procedimientos y decidir de forma informada.</span></div>
+      <div class="g-attr"><b>Interactivo</b><span>Anotar preguntas y ejercicios de respiración integrados.</span></div>
+    </div>
+
+    <h3 class="g-sub">De los hallazgos a las decisiones de interfaz</h3>
+    <p class="psection__note" style="margin-bottom:22px;">El núcleo del proyecto: cada decisión de diseño responde a un hallazgo concreto de la investigación y se traduce en algo tangible en la interfaz.</p>
+    <div class="g-hda-grid">
+
+      <div class="g-hda">
+        <div class="g-hda__row g-hda__row--h"><p class="g-hda__k">Hallazgo</p><p class="g-hda__t">Las pacientes sentían <b>inseguridad por no saber qué ocurriría</b> durante la consulta.</p></div>
+        <div class="g-hda__row g-hda__row--d"><p class="g-hda__k">Decisión</p><p class="g-hda__t">Organizar la información por etapas y presentarla de forma <b>gradual</b>, evitando sobrecargar a la usuaria.</p></div>
+        <div class="g-hda__row g-hda__row--a"><p class="g-hda__k">Aplicación</p><p class="g-hda__t">Checklist previa, explicación visual del procedimiento y recursos de preparación emocional.</p></div>
+      </div>
+
+      <div class="g-hda">
+        <div class="g-hda__row g-hda__row--h"><p class="g-hda__k">Hallazgo</p><p class="g-hda__t">La comunicación médica se percibía como <b>técnica, invasiva y poco empática</b>.</p></div>
+        <div class="g-hda__row g-hda__row--d"><p class="g-hda__k">Decisión</p><p class="g-hda__t">Usar un tono cercano y ofrecer un espacio para <b>resolver dudas sin juicio</b>, antes de la consulta.</p></div>
+        <div class="g-hda__row g-hda__row--a"><p class="g-hda__k">Aplicación</p><p class="g-hda__t">Asistente conversacional “Ginea” con preguntas frecuentes y recordatorio de confidencialidad.</p></div>
+      </div>
+
+      <div class="g-hda">
+        <div class="g-hda__row g-hda__row--h"><p class="g-hda__k">Hallazgo</p><p class="g-hda__t">El manejo de la información es lo más valorado, y funciona mejor cuando es <b>visual y didáctica</b>.</p></div>
+        <div class="g-hda__row g-hda__row--d"><p class="g-hda__k">Decisión</p><p class="g-hda__t">Priorizar contenido <b>visual y accionable</b> por sobre el texto técnico extenso.</p></div>
+        <div class="g-hda__row g-hda__row--a"><p class="g-hda__k">Aplicación</p><p class="g-hda__t">Tarjetas temáticas (“¿Qué es el PAP?”, “¿Qué pueden realizarme?”) y contenido “ver antes de tu consulta”.</p></div>
+      </div>
+
+      <div class="g-hda">
+        <div class="g-hda__row g-hda__row--h"><p class="g-hda__k">Hallazgo</p><p class="g-hda__t">La <b>checklist personalizable</b> fue la herramienta mejor evaluada del prototipo (98,6%).</p></div>
+        <div class="g-hda__row g-hda__row--d"><p class="g-hda__k">Decisión</p><p class="g-hda__t">Convertir la preparación en una <b>lista accionable y recordable</b>.</p></div>
+        <div class="g-hda__row g-hda__row--a"><p class="g-hda__k">Aplicación</p><p class="g-hda__t">Checklist con preguntas al médico, qué llevar el día de la consulta y recordatorios.</p></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 5 · Flujo principal -->
+  <section class="psection">
+    <p class="g-kicker">05 · Flujo principal de la plataforma</p>
+    <h2 class="psection__title">Un camino claro hasta la consulta</h2>
+    <p class="psection__note">El recorrido principal lleva a la usuaria, paso a paso, desde el registro hasta reservar su hora ya preparada.</p>
+    <div class="g-flow">
+      <div class="g-flow__step">
+        <div class="g-flow__thumb"><img src="../img/ginea/registro.png" alt="Pantalla de registro" loading="lazy"></div>
+        <span class="g-flow__n">1</span>
+        <p class="g-flow__h">Registro</p>
+        <p class="g-flow__d">Crea su perfil y define preferencias.</p>
+      </div>
+      <span class="g-flow__arrow">→</span>
+      <div class="g-flow__step">
+        <div class="g-flow__thumb"><img src="../img/ginea/home.png" alt="Pantalla de inicio" loading="lazy"></div>
+        <span class="g-flow__n">2</span>
+        <p class="g-flow__h">Inicio</p>
+        <p class="g-flow__d">Próxima cita y contenido recomendado.</p>
+      </div>
+      <span class="g-flow__arrow">→</span>
+      <div class="g-flow__step">
+        <div class="g-flow__thumb"><img src="../img/ginea/checklist.png" alt="Pantalla de checklist" loading="lazy"></div>
+        <span class="g-flow__n">3</span>
+        <p class="g-flow__h">Checklist</p>
+        <p class="g-flow__d">Preguntas y qué llevar a la consulta.</p>
+      </div>
+      <span class="g-flow__arrow">→</span>
+      <div class="g-flow__step">
+        <div class="g-flow__thumb"><img src="../img/ginea/search.png" alt="Búsqueda de profesionales" loading="lazy"></div>
+        <span class="g-flow__n">4</span>
+        <p class="g-flow__h">Buscar profesional</p>
+        <p class="g-flow__d">Elige según reseñas y afinidad.</p>
+      </div>
+      <span class="g-flow__arrow">→</span>
+      <div class="g-flow__step">
+        <div class="g-flow__thumb"><img src="../img/ginea/booking.png" alt="Reserva de hora" loading="lazy"></div>
+        <span class="g-flow__n">5</span>
+        <p class="g-flow__h">Reserva de hora</p>
+        <p class="g-flow__d">Fecha, detalles y envío del checklist.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · Wireframes e iteraciones -->
+  <section class="psection">
+    <p class="g-kicker">06 · Wireframes e iteraciones</p>
+    <h2 class="psection__title">De la estructura a la interfaz</h2>
+    <p class="psection__note">El insight de “entregar información gradual” definió la arquitectura del inicio antes que su estética: primero la próxima cita, luego el contenido recomendado en tarjetas breves, después el chat y los accesos. La interfaz final viste esa misma estructura con un lenguaje visual cálido.</p>
+    <div class="g-wire-compare">
+      <div class="g-wire-side">
+        <span class="g-wtag g-wtag--wire">Wireframe · estructura</span>
+        <div class="g-wire" aria-hidden="true">
+          <div class="g-wire__head"></div>
+          <div class="g-wire__card"></div>
+          <div class="g-wire__lbl"></div>
+          <div class="g-wire__cards"><i></i><i></i><i></i></div>
+          <div class="g-wire__lbl"></div>
+          <div class="g-wire__bar"></div>
+          <div class="g-wire__cards2"><i></i><i></i></div>
+        </div>
+      </div>
+      <span class="g-wire-arrow">→</span>
+      <div class="g-wire-side">
+        <span class="g-wtag g-wtag--ui">Interfaz final</span>
+        <img class="g-wire-real" src="../img/ginea/home.png" alt="Pantalla de inicio final de Ginea" loading="lazy">
+      </div>
+    </div>
+    <p class="psection__hint" style="text-align:center;margin-top:22px;">Reconstrucción esquemática de la arquitectura del inicio · la jerarquía prioriza lo urgente y revela el resto de forma progresiva.</p>
+  </section>
+
+  <!-- 7 · Interfaz y prototipo final -->
+  <section class="psection">
+    <p class="g-kicker">07 · Interfaz y prototipo final</p>
+    <h2 class="psection__title">El prototipo en acción</h2>
+    <p class="psection__note">Un recorrido lento, centrado en una sola tarea: <strong>prepararse y reservar la primera consulta</strong>. Avanza solo, o navega paso a paso.</p>
+
+    <div class="g-player" data-player>
+      <div class="g-shell">
+        <div class="g-slides">
+          <img class="g-slide is-on" src="../img/ginea/registro.png" alt="Registro" data-title="Registro" data-desc="La usuaria entra y crea su perfil en segundos, sin fricción.">
+          <img class="g-slide" src="../img/ginea/home.png" alt="Inicio" data-title="Inicio" data-desc="Ve su próxima cita y contenido recomendado para llegar preparada.">
+          <img class="g-slide" src="../img/ginea/checklist.png" alt="Checklist" data-title="Checklist" data-desc="Arma su checklist: preguntas para el médico y qué llevar el día de la consulta.">
+          <img class="g-slide" src="../img/ginea/search.png" alt="Buscar profesional" data-title="Buscar profesional" data-desc="Encuentra una ginecóloga según reseñas y afinidad, con perfiles cercanos.">
+          <img class="g-slide" src="../img/ginea/booking.png" alt="Reserva de hora" data-title="Reserva de hora" data-desc="Elige fecha y confirma; puede enviar su checklist junto con la reserva.">
+        </div>
+        <div class="g-progress"><i></i></div>
+      </div>
+      <div class="g-play-ui">
+        <div class="g-play-head">
+          <span class="g-step-n" data-role="counter">01 / 05</span>
+          <span class="g-play-task">Tarea · reservar consulta</span>
+        </div>
+        <h3 class="g-step-title" data-role="title">Registro</h3>
+        <p class="g-step-desc" data-role="desc">La usuaria entra y crea su perfil en segundos, sin fricción.</p>
+        <div class="g-controls">
+          <button class="g-play-btn" data-role="toggle" aria-label="Pausar o reanudar el recorrido">
+            <span data-role="toggle-label">Pausar</span>
+          </button>
+          <ol class="g-dots" data-role="dots" aria-label="Pasos del recorrido"></ol>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="g-sub">Pantallas clave</h3>
+    <div class="g-shots">
+      <figure class="g-shot"><img src="../img/ginea/home.png" alt="Inicio de Ginea: próxima cita y contenido recomendado" loading="lazy" data-zoom="../img/ginea/home.png"><figcaption>Inicio</figcaption></figure>
+      <figure class="g-shot"><img src="../img/ginea/checklist.png" alt="Checklist de preparación para la consulta" loading="lazy" data-zoom="../img/ginea/checklist.png"><figcaption>Checklist</figcaption></figure>
+      <figure class="g-shot"><img src="../img/ginea/search.png" alt="Búsqueda de ginecólogos con reseñas" loading="lazy" data-zoom="../img/ginea/search.png"><figcaption>Buscar profesional</figcaption></figure>
+      <figure class="g-shot"><img src="../img/ginea/booking.png" alt="Reserva de hora con calendario y detalles" loading="lazy" data-zoom="../img/ginea/booking.png"><figcaption>Reserva de hora</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- 8 · Testeo, resultados y aprendizajes -->
+  <section class="psection">
+    <p class="g-kicker">08 · Testeo, resultados y aprendizajes</p>
+    <h2 class="psection__title">Qué aprendimos al probarlo</h2>
+    <p class="psection__note">Hicimos tres tipos de testeo: mujeres usando la app (intuitividad e interés), envío de un PDF con información para medir si bajaba la incertidumbre previa, y validación del mapa de viaje para ver si la propuesta les hacía sentido.</p>
+
+    <div class="g-hero-stat">
+      <b>100%</b>
+      <span>de las participantes sintió que, tras recibir la información, tenía <strong>más claridad sobre qué esperar</strong> en una consulta ginecológica.</span>
+    </div>
+
+    <h3 class="g-sub" style="margin-top:8px;">Validación del mapa de viaje</h3>
+    <div class="g-tiles">
+      <div class="g-tile"><div class="g-tile__v">98,6%</div><p class="g-tile__l">encuentra útil la checklist</p><div class="g-tile__track"><div class="g-tile__fill" style="width:98.6%"></div></div></div>
+      <div class="g-tile"><div class="g-tile__v">97%</div><p class="g-tile__l">valora guardar su información</p><div class="g-tile__track"><div class="g-tile__fill" style="width:97%"></div></div></div>
+      <div class="g-tile"><div class="g-tile__v">89,9%</div><p class="g-tile__l">quiere el video del profesional</p><div class="g-tile__track"><div class="g-tile__fill" style="width:89.9%"></div></div></div>
+      <div class="g-tile"><div class="g-tile__v">88,4%</div><p class="g-tile__l">seguiría usando la app</p><div class="g-tile__track"><div class="g-tile__fill" style="width:88.4%"></div></div></div>
+      <div class="g-tile"><div class="g-tile__v">82,6%</div><p class="g-tile__l">valora la información visual de procedimientos</p><div class="g-tile__track"><div class="g-tile__fill" style="width:82.6%"></div></div></div>
+      <div class="g-tile"><div class="g-tile__v">75%</div><p class="g-tile__l">quiere ejercicios de mindfulness</p><div class="g-tile__track"><div class="g-tile__fill" style="width:75%"></div></div></div>
+    </div>
+    <p class="g-tiles-note">Porcentaje de personas a quienes cada característica “le hace sentido” o usaría (validación del mapa de viaje).</p>
+
+    <h3 class="g-sub">Aprendizajes</h3>
+    <ul class="g-insights">
+      <li>La <b>checklist personalizable</b> fue destacada como la herramienta más útil para aprovechar la consulta.</li>
+      <li>Incorporar un <b>sistema de recordatorios</b> potenciaría su uso y su utilidad.</li>
+      <li>La información debe entregarse de forma <b>gradual y visual</b>: es lo que más reduce la incertidumbre.</li>
+    </ul>
+
+    <div class="g-limit">
+      <div class="g-limit__icon">!</div>
+      <div>
+        <h4>Una limitación que conviene transparentar</h4>
+        <p>El testeo directo de la información se realizó con <b>5 participantes de entre 19 y 22 años</b>. Se trata, por tanto, de una <b>validación exploratoria</b>: sus resultados son indicativos y sirven para orientar decisiones, pero <b>no son representativos de todas las mujeres</b>. Un siguiente paso necesario es testear con una muestra más amplia y diversa en edad, contexto y experiencia previa.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ficha -->
+  <section class="psection">
+    <h2 class="psection__title">Ficha</h2>
+    <dl class="ficha">
+      <div><dt>Rol</dt><dd>Investigación UX · definición de necesidades · UI · testeo</dd></div>
+      <div><dt>Ámbito</dt><dd>Salud · ginecología amable</dd></div>
+      <div><dt>Tipo</dt><dd>Proyecto académico · caso de estudio exploratorio</dd></div>
+      <div><dt>Entregables</dt><dd>Investigación · mapa de experiencia · flujo · prototipo · testeo</dd></div>
+    </dl>
+  </section>
+
+  <footer class="pfooter">
+    <div class="pfooter__inner">
+      <span>© 2026 Daniela Ruiz Ardiles</span>
+      <a href="../index.html#contacto" class="pfooter__next">¿Conversamos? Contacto →</a>
+    </div>
+  </footer>
+
+  <script src="../js/lightbox.js"></script>
+  <script>
+    // Recorrido lento de una tarea (autoplay con crossfade, pausable y navegable)
+    (function () {
+      var root = document.querySelector('[data-player]');
+      if (!root) return;
+      var slides = Array.prototype.slice.call(root.querySelectorAll('.g-slide'));
+      var counter = root.querySelector('[data-role="counter"]');
+      var title = root.querySelector('[data-role="title"]');
+      var desc = root.querySelector('[data-role="desc"]');
+      var toggle = root.querySelector('[data-role="toggle"]');
+      var toggleLabel = root.querySelector('[data-role="toggle-label"]');
+      var dotsWrap = root.querySelector('[data-role="dots"]');
+      var progress = root.querySelector('.g-progress i');
+      var n = slides.length;
+      var DUR = 3400;
+      var i = 0, timer = null, playing = false;
+
+      root.style.setProperty('--dur', DUR + 'ms');
+
+      // dots
+      slides.forEach(function (_, k) {
+        var li = document.createElement('li');
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.setAttribute('aria-label', 'Ir al paso ' + (k + 1));
+        b.addEventListener('click', function () { go(k); pause(); });
+        li.appendChild(b);
+        dotsWrap.appendChild(li);
+      });
+      var dots = Array.prototype.slice.call(dotsWrap.querySelectorAll('button'));
+
+      function render() {
+        slides.forEach(function (s, k) { s.classList.toggle('is-on', k === i); });
+        dots.forEach(function (d, k) { d.classList.toggle('on', k === i); });
+        counter.textContent = ('0' + (i + 1)).slice(-2) + ' / ' + ('0' + n).slice(-2);
+        title.textContent = slides[i].dataset.title;
+        desc.textContent = slides[i].dataset.desc;
+      }
+      function restartProgress() {
+        if (!progress) return;
+        progress.style.animation = 'none';
+        void progress.offsetWidth; // reflow
+        progress.style.animation = '';
+      }
+      function go(k) { i = (k + n) % n; render(); if (playing) restartProgress(); }
+      function next() { go(i + 1); }
+
+      function play() {
+        playing = true;
+        root.classList.add('is-playing');
+        toggleLabel.textContent = 'Pausar';
+        restartProgress();
+        clearInterval(timer);
+        timer = setInterval(next, DUR);
+      }
+      function pause() {
+        playing = false;
+        root.classList.remove('is-playing');
+        toggleLabel.textContent = 'Reanudar';
+        clearInterval(timer);
+        if (progress) progress.style.animation = 'none';
+      }
+      toggle.addEventListener('click', function () { playing ? pause() : play(); });
+
+      render();
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) { pause(); }
+      else {
+        // Empieza a reproducir solo cuando entra en pantalla
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              if (e.isIntersecting && !playing && i === 0) { play(); io.disconnect(); }
+            });
+          }, { threshold: 0.4 });
+          io.observe(root);
+        } else { play(); }
+      }
+    })();
+  </script>
+</body>
+</html>
