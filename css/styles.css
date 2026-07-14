@@ -620,6 +620,21 @@ img { max-width: 100%; display: block; }
   gap: 18px;
 }
 
+.footer__mail {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--bg);
+  font-size: 15px;
+  text-decoration: none;
+  opacity: 0.92;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.footer__mail:hover { color: var(--accent-rose); opacity: 1; }
+
+.footer__mail svg { width: 18px; height: 18px; flex: none; }
+
 .footer__bar {
   border-top: 1px solid rgba(246, 241, 233, 0.14);
 }

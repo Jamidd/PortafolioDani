@@ -309,6 +309,101 @@
       .shot { position: static; width: 92% !important; transform: rotate(0deg) !important; }
       .shot--phone { width: 58% !important; }
     }
+
+    /* ── Rediseño UX/UI: antes/después · P→D→B · flujo · háptica ── */
+    .ux-lead { max-width: 780px; font-size: 15px; font-weight: 300; line-height: 1.85; color: var(--ink-soft); }
+    .ux-sub {
+      margin: 48px 0 20px;
+      font-family: var(--sans);
+      font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    /* Antes / después */
+    .ux-compare-grid { display: grid; gap: 22px; }
+    .ux-compare { border: none; border-radius: 0; padding: 8px 0; background: none; }
+    .ux-compare__screens { display: flex; gap: 16px; align-items: center; justify-content: center; flex-wrap: wrap; }
+    .ux-side { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .ux-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 11px; border-radius: 999px; }
+    .ux-tag--before { background: #FBE7E4; color: #C23B2E; }
+    .ux-tag--after  { background: #E2F1E9; color: #1F8A4C; }
+    .ux-arrow { color: var(--ink-muted); font-size: 24px; padding: 0 2px; }
+    .ux-compare__text { margin-top: 20px; text-align: center; max-width: 640px; margin-left: auto; margin-right: auto; }
+    .ux-compare__title { margin: 0 0 6px; font-family: var(--serif); font-weight: 500; font-size: 20px; color: var(--ink); }
+    .ux-compare__desc { margin: 0; font-size: 13.5px; line-height: 1.65; color: var(--ink-soft); }
+
+    /* Teléfono esquemático (reconstrucción) */
+    .ux-phone {
+      width: 148px; aspect-ratio: 172/355;
+      border: 6px solid #14151b; border-radius: 22px;
+      padding: 11px 9px; box-sizing: border-box;
+      display: flex; flex-direction: column; gap: 7px;
+      position: relative; overflow: hidden;
+      box-shadow: 0 16px 30px rgba(33,29,36,0.18);
+    }
+    .ux-phone--dark  { background: #0B0D3E; }
+    .ux-phone--light { background: #F2F4F7; }
+    .ux-topbar { display: flex; align-items: center; justify-content: space-between; height: 14px; }
+    .ux-menu { width: 15px; height: 2px; border-radius: 2px; background: currentColor; box-shadow: 0 4px 0 currentColor, 0 -4px 0 currentColor; }
+    .ux-phone--dark .ux-topbar { color: rgba(255,255,255,0.7); }
+    .ux-phone--light .ux-topbar { color: rgba(10,14,101,0.55); }
+    .ux-mode { width: 12px; height: 12px; border-radius: 50%; background: currentColor; }
+    .ux-title { height: 11px; width: 62%; border-radius: 3px; }
+    .ux-line { height: 6px; border-radius: 3px; width: 100%; }
+    .ux-block { border-radius: 6px; }
+    .ux-phone--dark .ux-title, .ux-phone--dark .ux-line, .ux-phone--dark .ux-block { background: rgba(255,255,255,0.13); }
+    .ux-phone--light .ux-title, .ux-phone--light .ux-line, .ux-phone--light .ux-block { background: rgba(10,14,101,0.10); }
+    .ux-pill { border-radius: 999px; height: 21px; display: flex; align-items: center; justify-content: center; font-size: 8px; letter-spacing: 0.05em; font-weight: 700; text-transform: uppercase; }
+    .ux-pill--accent  { background: #00539A; color: #fff; }
+    .ux-pill--gold    { background: #FEBE10; color: #0A0E65; }
+    .ux-pill--ghost   { background: transparent; border: 1px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.8); }
+    .ux-pill--ghost-l { background: transparent; border: 1px solid rgba(10,14,101,0.22); color: #00539A; }
+    .ux-emergency { width: 26px; height: 26px; border-radius: 50%; background: #E5384A; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 800; flex: none; }
+    .ux-emergency--wide { width: 100%; border-radius: 8px; height: 22px; font-size: 8px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .ux-fab { position: absolute; right: 9px; bottom: 9px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
+    .ux-spacer { flex: 1 1 auto; }
+    .ux-tabs { display: flex; border-radius: 8px; overflow: hidden; border: 1px solid rgba(10,14,101,0.18); }
+    .ux-tabs span { flex: 1; text-align: center; font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; padding: 7px 0; color: #5b6480; }
+    .ux-tabs .on { background: #00539A; color: #fff; }
+    .ux-steps { display: flex; align-items: center; gap: 6px; justify-content: center; margin: 2px 0 4px; }
+    .ux-steps i { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.2); font-size: 7px; color: #0B0D3E; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+    .ux-steps i.on { background: #FEBE10; }
+    .ux-steps b { width: 14px; height: 2px; background: rgba(255,255,255,0.2); display: block; }
+
+    /* Problema → Decisión → Beneficio */
+    .pdb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(255px, 1fr)); gap: 20px; }
+    .pdb { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: #fff; display: flex; flex-direction: column; }
+    .pdb__row { padding: 15px 18px; }
+    .pdb__row + .pdb__row { border-top: 1px solid var(--border); }
+    .pdb__k { margin: 0 0 5px; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+    .pdb__row--p .pdb__k { color: #C23B2E; }
+    .pdb__row--d .pdb__k { color: #00539A; }
+    .pdb__row--b .pdb__k { color: #1F8A4C; }
+    .pdb__row--b { background: #F5FAF7; margin-top: auto; }
+    .pdb__t { margin: 0; font-size: 13px; line-height: 1.55; color: var(--ink-soft); }
+    .pdb__t b { color: var(--ink); font-weight: 600; }
+
+    /* Flujo simplificado */
+    .flow { display: flex; align-items: stretch; gap: 10px; flex-wrap: wrap; }
+    .flow__step { flex: 1 1 160px; border: 1px solid var(--border); border-radius: 10px; padding: 16px; background: #fff; }
+    .flow__n { font-family: var(--sans); font-size: 11px; font-weight: 700; color: #fff; background: #0A0E65; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 11px; }
+    .flow__h { margin: 0 0 5px; font-size: 14px; font-weight: 600; color: var(--ink); }
+    .flow__d { margin: 0; font-size: 12.5px; line-height: 1.5; color: var(--ink-soft); }
+    .flow__branch { display: flex; gap: 6px; margin-top: 9px; flex-wrap: wrap; }
+    .flow__chip { font-size: 10px; border: 1px solid var(--border); border-radius: 999px; padding: 3px 9px; color: var(--ink-soft); }
+    .flow__sep { align-self: center; color: var(--accent); font-size: 18px; }
+
+    /* Retroalimentación háptica */
+    .haptic { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; }
+    .haptic__item { border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; background: #fff; }
+    .haptic__wave { display: flex; align-items: center; gap: 4px; height: 22px; margin-bottom: 12px; }
+    .haptic__wave i { width: 6px; border-radius: 3px; background: #00539A; display: block; }
+    .haptic__lbl { margin: 0; font-size: 13px; line-height: 1.5; color: var(--ink-soft); }
+    .haptic__lbl b { color: var(--ink); font-weight: 600; display: block; margin-bottom: 2px; }
+
+    @media (max-width: 620px) {
+      .flow__sep { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -392,6 +487,195 @@
   </section>
 
   <section class="psection">
+    <h2 class="psection__title">Rediseño de interacción y accesibilidad</h2>
+    <p class="ux-lead">La aplicación contaba con una base funcional desarrollada previamente por un programador. Mi trabajo se enfocó en rediseñar la experiencia de uso para adaptarla al contexto real de los guardias en terreno, priorizando la accesibilidad, la seguridad y la rapidez de operación. Se simplificaron los flujos, se reorganizó la interfaz para facilitar el uso con una sola mano y se incorporaron respuestas visuales y hápticas que permiten comprender el estado del sistema sin depender únicamente de la pantalla.</p>
+
+    <!-- Antes / después -->
+    <h3 class="ux-sub">Antes y después</h3>
+    <div class="ux-compare-grid">
+
+      <!-- Emergencia -->
+      <div class="ux-compare">
+        <div class="ux-compare__screens">
+          <div class="ux-side">
+            <span class="ux-tag ux-tag--before">Antes</span>
+            <div class="ux-phone ux-phone--dark">
+              <div class="ux-topbar"><span class="ux-menu"></span><span class="ux-mode"></span></div>
+              <div class="ux-title"></div>
+              <div class="ux-line" style="width:80%"></div>
+              <div class="ux-pill ux-pill--accent">Registrar ingreso</div>
+              <div class="ux-pill ux-pill--accent">Registrar egreso</div>
+              <div class="ux-emergency ux-emergency--wide">Emergencia</div>
+            </div>
+          </div>
+          <span class="ux-arrow">→</span>
+          <div class="ux-side">
+            <span class="ux-tag ux-tag--after">Después</span>
+            <div class="ux-phone ux-phone--dark">
+              <div class="ux-topbar"><span class="ux-menu"></span><span class="ux-mode"></span></div>
+              <div class="ux-title"></div>
+              <div class="ux-line" style="width:80%"></div>
+              <div class="ux-pill ux-pill--accent">Registrar ingreso</div>
+              <div class="ux-pill ux-pill--accent">Registrar egreso</div>
+              <div class="ux-spacer"></div>
+              <div class="ux-emergency ux-fab">!</div>
+            </div>
+          </div>
+        </div>
+        <div class="ux-compare__text">
+          <h4 class="ux-compare__title">Botón de emergencia</h4>
+          <p class="ux-compare__desc">Estaba en la zona inferior, junto a las acciones frecuentes, y podía activarse sin querer. Se reubicó como botón flotante diferenciado: sigue siempre visible y accesible, pero separado del flujo habitual.</p>
+        </div>
+      </div>
+
+      <!-- Control de acceso: pestañas -->
+      <div class="ux-compare">
+        <div class="ux-compare__screens">
+          <div class="ux-side">
+            <span class="ux-tag ux-tag--before">Antes</span>
+            <div class="ux-phone ux-phone--light">
+              <div class="ux-topbar"><span class="ux-menu"></span><span class="ux-mode"></span></div>
+              <div class="ux-title"></div>
+              <div class="ux-pill ux-pill--accent">Ingreso</div>
+              <div class="ux-pill ux-pill--accent">Egreso</div>
+              <div class="ux-line" style="width:90%"></div>
+              <div class="ux-line" style="width:70%"></div>
+            </div>
+          </div>
+          <span class="ux-arrow">→</span>
+          <div class="ux-side">
+            <span class="ux-tag ux-tag--after">Después</span>
+            <div class="ux-phone ux-phone--light">
+              <div class="ux-topbar"><span class="ux-menu"></span><span class="ux-mode"></span></div>
+              <div class="ux-title"></div>
+              <div class="ux-tabs"><span class="on">Ingreso</span><span>Egreso</span></div>
+              <div class="ux-line" style="width:90%"></div>
+              <div class="ux-line" style="width:65%"></div>
+              <div class="ux-spacer"></div>
+              <div class="ux-pill ux-pill--accent">Continuar</div>
+            </div>
+          </div>
+        </div>
+        <div class="ux-compare__text">
+          <h4 class="ux-compare__title">Ingreso y egreso</h4>
+          <p class="ux-compare__desc">Dos botones competían visualmente y provocaban errores que costaban tiempo. Se reemplazaron por un selector de pestañas, dejando “Ingreso” por defecto por ser la acción más frecuente.</p>
+        </div>
+      </div>
+
+      <!-- Carga cognitiva: flujo secuencial -->
+      <div class="ux-compare">
+        <div class="ux-compare__screens">
+          <div class="ux-side">
+            <span class="ux-tag ux-tag--before">Antes</span>
+            <div class="ux-phone ux-phone--dark">
+              <div class="ux-topbar"><span class="ux-menu"></span><span class="ux-mode"></span></div>
+              <div class="ux-title"></div>
+              <div class="ux-line"></div>
+              <div class="ux-line" style="width:85%"></div>
+              <div class="ux-block" style="height:20px"></div>
+              <div class="ux-line" style="width:70%"></div>
+              <div class="ux-block" style="height:20px"></div>
+              <div class="ux-line" style="width:90%"></div>
+              <div class="ux-line" style="width:60%"></div>
+            </div>
+          </div>
+          <span class="ux-arrow">→</span>
+          <div class="ux-side">
+            <span class="ux-tag ux-tag--after">Después</span>
+            <div class="ux-phone ux-phone--dark">
+              <div class="ux-topbar"><span class="ux-menu"></span><span class="ux-mode"></span></div>
+              <div class="ux-steps"><i class="on">1</i><b></b><i>2</i><b></b><i>3</i></div>
+              <div class="ux-title" style="margin:0 auto"></div>
+              <div class="ux-block" style="height:22px"></div>
+              <div class="ux-spacer"></div>
+              <div class="ux-pill ux-pill--accent">Siguiente</div>
+            </div>
+          </div>
+        </div>
+        <div class="ux-compare__text">
+          <h4 class="ux-compare__title">De una vista densa a un flujo paso a paso</h4>
+          <p class="ux-compare__desc">La vista inicial concentraba demasiada información y decisiones. Se reemplazó por un flujo secuencial que guía al guardia paso a paso y reduce la carga cognitiva durante la operación.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Problema → Decisión → Beneficio -->
+    <h3 class="ux-sub">Problema → decisión → beneficio</h3>
+    <div class="pdb-grid">
+
+      <div class="pdb">
+        <div class="pdb__row pdb__row--p"><p class="pdb__k">Problema</p><p class="pdb__t">El botón de emergencia estaba cerca de las acciones frecuentes y podía presionarse accidentalmente.</p></div>
+        <div class="pdb__row pdb__row--d"><p class="pdb__k">Decisión</p><p class="pdb__t">Se trasladó a una posición diferenciada y se modificó su jerarquía visual.</p></div>
+        <div class="pdb__row pdb__row--b"><p class="pdb__k">Beneficio</p><p class="pdb__t">Se reduce el riesgo de activaciones involuntarias <b>sin perder el acceso rápido</b>.</p></div>
+      </div>
+
+      <div class="pdb">
+        <div class="pdb__row pdb__row--p"><p class="pdb__k">Problema</p><p class="pdb__t">La operación se hace con una mano y con el pulgar, muchas veces en movimiento.</p></div>
+        <div class="pdb__row pdb__row--d"><p class="pdb__k">Decisión</p><p class="pdb__t">Acciones frecuentes en los dos tercios inferiores, botones de mínimo 48×48 px y mayor contraste.</p></div>
+        <div class="pdb__row pdb__row--b"><p class="pdb__k">Beneficio</p><p class="pdb__t">Alcance cómodo con el pulgar y <b>mejor reconocimiento</b> en cualquier iluminación.</p></div>
+      </div>
+
+      <div class="pdb">
+        <div class="pdb__row pdb__row--p"><p class="pdb__k">Problema</p><p class="pdb__t">Sin respuesta clara, el usuario repetía acciones o dudaba si el sistema estaba procesando.</p></div>
+        <div class="pdb__row pdb__row--d"><p class="pdb__k">Decisión</p><p class="pdb__t">Lenguaje de respuestas hápticas e indicadores de carga (ruedas de progreso).</p></div>
+        <div class="pdb__row pdb__row--b"><p class="pdb__k">Beneficio</p><p class="pdb__t">Se entiende el estado del sistema <b>sin mirar fijo la pantalla</b> y se evitan acciones duplicadas.</p></div>
+      </div>
+
+    </div>
+
+    <!-- Flujo simplificado -->
+    <h3 class="ux-sub">Flujo simplificado</h3>
+    <div class="flow">
+      <div class="flow__step">
+        <div class="flow__n">1</div>
+        <p class="flow__h">Identifícate</p>
+        <p class="flow__d">Tarjeta NFC o ID + contraseña. Un solo punto de entrada para todos los flujos.</p>
+      </div>
+      <span class="flow__sep">→</span>
+      <div class="flow__step">
+        <div class="flow__n">2</div>
+        <p class="flow__h">Elige la acción</p>
+        <p class="flow__d">La app abre solo lo necesario según la tarea.</p>
+        <div class="flow__branch"><span class="flow__chip">Reporte inicial</span><span class="flow__chip">Control de acceso</span><span class="flow__chip">Ronda</span></div>
+      </div>
+      <span class="flow__sep">→</span>
+      <div class="flow__step">
+        <div class="flow__n">3</div>
+        <p class="flow__h">Completa paso a paso</p>
+        <p class="flow__d">Foto y ubicación · perfil de la persona · escaneo del punto NFC, uno a la vez.</p>
+      </div>
+      <span class="flow__sep">→</span>
+      <div class="flow__step">
+        <div class="flow__n">4</div>
+        <p class="flow__h">Confirmación + feedback</p>
+        <p class="flow__d">Estado claro en color y una respuesta háptica que confirma el resultado.</p>
+      </div>
+    </div>
+
+    <!-- Retroalimentación háptica -->
+    <h3 class="ux-sub">Retroalimentación del sistema</h3>
+    <div class="haptic">
+      <div class="haptic__item">
+        <div class="haptic__wave"><i style="height:16px"></i></div>
+        <p class="haptic__lbl"><b>Acción exitosa</b>Una vibración breve.</p>
+      </div>
+      <div class="haptic__item">
+        <div class="haptic__wave"><i style="height:10px"></i><i style="height:10px"></i><i style="height:22px"></i></div>
+        <p class="haptic__lbl"><b>Error</b>Dos vibraciones y una prolongada.</p>
+      </div>
+      <div class="haptic__item">
+        <div class="haptic__wave" style="color:#FEBE10"><i style="height:16px;background:#C79200"></i></div>
+        <p class="haptic__lbl"><b>Tarjeta NFC detectada</b>Una vibración al leer la etiqueta.</p>
+      </div>
+      <div class="haptic__item">
+        <div class="haptic__wave"><i style="height:14px;border-radius:50%;width:14px;border:2px solid #00539A;background:transparent"></i></div>
+        <p class="haptic__lbl"><b>Procesando</b>Ruedas de progreso para evitar repetir una acción.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="psection">
     <h2 class="psection__title">Sistema de diseño</h2>
     <p class="psection__note">Sistema visual diseñado para mantener claridad, coherencia y legibilidad en distintos contextos de uso. La tipografía organiza la información y la paleta se adapta a los modos diurno y nocturno, incorporando contrastes y colores de estado que facilitan una navegación rápida y segura.</p>
 
@@ -454,7 +738,7 @@
   </section>
 
   <section class="psection">
-    <h2 class="psection__title">Decisiones de diseño</h2>
+    <h2 class="psection__title">Ficha</h2>
     <p class="psection__note">El modo oscuro no es cosmético: en rondas nocturnas una pantalla clara deslumbra y delata la posición del guardia. La paleta trabaja el azul marino y el amarillo institucional de Lyssa manteniendo contraste en ambos modos, y las acciones principales quedan al alcance del pulgar.</p>
     <dl class="ficha">
       <div><dt>Rol</dt><dd>Diseño visual UX/UI · apoyo en flujos de navegación</dd></div>
